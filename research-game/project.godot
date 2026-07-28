@@ -14,6 +14,11 @@ config/name="research-game"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Config="*uid://cv8xiawi2apcr"
+FailureController="*uid://dxm7c4iv4ywmq"
+
 [display]
 
 window/stretch/mode="canvas_items"
