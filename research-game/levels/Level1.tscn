@@ -1,0 +1,133 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" uid="uid://6p1e2rrxc4vq" path="res://scripts/Player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://7aqo4owcqt8q" path="res://scripts/Hazard.gd" id="2_hazard"]
+[ext_resource type="Script" uid="uid://bmjp1j852m5e8" path="res://scripts/Checkpoint.gd" id="3_checkpoint"]
+[ext_resource type="Script" uid="uid://bopxo1m70fs35" path="res://scripts/Companion.gd" id="4_companion"]
+[ext_resource type="Script" uid="uid://caxilf1f7nx6l" path="res://scripts/DiegeticPresenter.gd" id="5_diegetic"]
+[ext_resource type="Script" uid="uid://bm266tyvyfstx" path="res://scripts/NonDiegeticPresenter.gd" id="6_nondiegetic"]
+[ext_resource type="Script" uid="uid://cv1agpdryxf1t" path="res://scripts/ArrowOverlay.gd" id="7_arrow"]
+[ext_resource type="Script" uid="uid://da48jwd0i070s" path="res://scripts/FailureData.gd" id="8_faildata"]
+[ext_resource type="Script" path="res://levels/Level1.gd" id="9_level1"]
+
+[sub_resource type="RectangleShape2D" id="PlayerShape"]
+size = Vector2(24, 48)
+
+[sub_resource type="RectangleShape2D" id="GroundLeftShape"]
+size = Vector2(400, 40)
+
+[sub_resource type="RectangleShape2D" id="GroundRightShape"]
+size = Vector2(450, 40)
+
+[sub_resource type="RectangleShape2D" id="CheckpointShape"]
+size = Vector2(20, 80)
+
+[sub_resource type="RectangleShape2D" id="PitShape"]
+size = Vector2(150, 300)
+
+[sub_resource type="Resource" id="PitFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "pit_late_jump"
+cause_message = "Jumped too late — take off earlier."
+demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "stumble"
+
+[node name="Level1" type="Node2D"]
+script = ExtResource("9_level1")
+
+[node name="GroundLeft" type="StaticBody2D" parent="."]
+position = Vector2(200, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundLeft"]
+shape = SubResource("GroundLeftShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundLeft"]
+offset_left = -200.0
+offset_top = -20.0
+offset_right = 200.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="GroundRight" type="StaticBody2D" parent="."]
+position = Vector2(775, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundRight"]
+shape = SubResource("GroundRightShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundRight"]
+offset_left = -225.0
+offset_top = -20.0
+offset_right = 225.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="Checkpoint01" type="Area2D" parent="."]
+position = Vector2(300, 380)
+script = ExtResource("3_checkpoint")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint01"]
+shape = SubResource("CheckpointShape")
+
+[node name="PitTrigger" type="Area2D" parent="."]
+position = Vector2(475, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("PitFailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PitTrigger"]
+position = Vector2(0, 150)
+shape = SubResource("PitShape")
+
+[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+position = Vector2(100, 376)
+script = ExtResource("1_player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("PlayerShape")
+
+[node name="ColorRect" type="ColorRect" parent="Player"]
+offset_left = -12.0
+offset_top = -24.0
+offset_right = 12.0
+offset_bottom = 24.0
+color = Color(0.2, 0.6, 1, 1)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+current = true
+
+[node name="Companion" type="Node2D" parent="." groups=["companion"]]
+position = Vector2(60, 352)
+script = ExtResource("4_companion")
+
+[node name="ColorRect" type="ColorRect" parent="Companion"]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(1, 0.8, 0.2, 1)
+
+[node name="DiegeticPresenter" type="Node" parent="." groups=["diegetic_presenter"]]
+script = ExtResource("5_diegetic")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="NonDiegeticPresenter" type="Control" parent="UI" groups=["non_diegetic_presenter"]]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("6_nondiegetic")
+hud_label = NodePath("HUDLabel")
+arrow = NodePath("ArrowOverlay")
+
+[node name="HUDLabel" type="Label" parent="UI/NonDiegeticPresenter"]
+visible = false
+anchor_right = 1.0
+offset_top = 40.0
+offset_bottom = 90.0
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+text = ""
+
+[node name="ArrowOverlay" type="Control" parent="UI/NonDiegeticPresenter"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("7_arrow")
