@@ -1,29 +1,33 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://b6srxwjk12ow3"]
 
 [ext_resource type="Script" uid="uid://doytubk8e6fg" path="res://scripts/Launcher.gd" id="1_launcher"]
 [ext_resource type="PackedScene" path="res://levels/Level1.tscn" id="2_level1"]
 
-[node name="Launcher" type="Control"]
+[node name="Launcher" type="Control" unique_id=537337537]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_launcher")
-code_field = NodePath("CenterContainer/VBoxContainer/CodeField")
-condition_picker = NodePath("CenterContainer/VBoxContainer/ConditionPicker")
-start_button = NodePath("CenterContainer/VBoxContainer/StartButton")
 first_level = ExtResource("2_level1")
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1527144116]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=340512960]
 custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="CodeField" type="LineEdit" parent="CenterContainer/VBoxContainer"]
+[node name="CodeField" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=340913514]
+layout_mode = 2
 placeholder_text = "Participant code"
 
-[node name="ConditionPicker" type="OptionButton" parent="CenterContainer/VBoxContainer"]
+[node name="ConditionPicker" type="OptionButton" parent="CenterContainer/VBoxContainer" unique_id=701489507]
+layout_mode = 2
 
-[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=2086282661]
+layout_mode = 2
 text = "Start"

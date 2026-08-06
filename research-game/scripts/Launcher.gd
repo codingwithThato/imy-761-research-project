@@ -11,10 +11,11 @@ extends Control
 ## IMPORTANT: this screen must not be reachable once play begins, or a curious
 ## participant will find it and flip their own condition.
 
-@export var code_field: LineEdit
-@export var condition_picker: OptionButton
-@export var start_button: Button
 @export var first_level: PackedScene
+
+@onready var code_field: LineEdit = $CenterContainer/VBoxContainer/CodeField
+@onready var condition_picker: OptionButton = $CenterContainer/VBoxContainer/ConditionPicker
+@onready var start_button: Button = $CenterContainer/VBoxContainer/StartButton
 
 
 func _ready() -> void:
@@ -22,6 +23,7 @@ func _ready() -> void:
 		condition_picker.clear()
 		condition_picker.add_item("Diegetic", 0)
 		condition_picker.add_item("Non-diegetic", 1)
+		condition_picker.select(0)
 	if start_button != null:
 		start_button.pressed.connect(_on_start)
 

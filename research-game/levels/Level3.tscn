@@ -1,0 +1,277 @@
+[gd_scene load_steps=29 format=3]
+
+[ext_resource type="Script" path="res://scripts/Player.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/Hazard.gd" id="2_hazard"]
+[ext_resource type="Script" path="res://scripts/Checkpoint.gd" id="3_checkpoint"]
+[ext_resource type="Script" path="res://scripts/Companion.gd" id="4_companion"]
+[ext_resource type="Script" path="res://scripts/DiegeticPresenter.gd" id="5_diegetic"]
+[ext_resource type="Script" path="res://scripts/NonDiegeticPresenter.gd" id="6_nondiegetic"]
+[ext_resource type="Script" path="res://scripts/ArrowOverlay.gd" id="7_arrow"]
+[ext_resource type="Script" path="res://scripts/FailureData.gd" id="8_faildata"]
+[ext_resource type="Script" path="res://levels/Level3.gd" id="9_level3"]
+[ext_resource type="Script" path="res://scripts/SpriteJuice.gd" id="10_juice"]
+[ext_resource type="Script" path="res://scripts/LevelExit.gd" id="11_exit"]
+[ext_resource type="PackedScene" path="res://levels/Level4.tscn" id="12_level4"]
+
+[sub_resource type="RectangleShape2D" id="PlayerShape"]
+size = Vector2(24, 48)
+
+[sub_resource type="RectangleShape2D" id="GroundAShape"]
+size = Vector2(350, 40)
+
+[sub_resource type="RectangleShape2D" id="GroundBShape"]
+size = Vector2(170, 40)
+
+[sub_resource type="RectangleShape2D" id="GroundCShape"]
+size = Vector2(210, 40)
+
+[sub_resource type="RectangleShape2D" id="GroundDShape"]
+size = Vector2(290, 40)
+
+[sub_resource type="RectangleShape2D" id="CheckpointShape"]
+size = Vector2(20, 80)
+
+[sub_resource type="RectangleShape2D" id="TightGap1Shape"]
+size = Vector2(130, 300)
+
+[sub_resource type="RectangleShape2D" id="SpikesShape"]
+size = Vector2(45, 28)
+
+[sub_resource type="RectangleShape2D" id="TightGap2Shape"]
+size = Vector2(140, 300)
+
+[sub_resource type="RectangleShape2D" id="Gap3Shape"]
+size = Vector2(160, 300)
+
+[sub_resource type="Resource" id="TightGap1FailureData"]
+script = ExtResource("8_faildata")
+cause_id = "tight_gap_1"
+cause_message = "Late again — this gap is tighter than the last one, jump the instant you leave the ledge."
+demo_points = PackedVector2Array(-65, 0, -20, -60, 15, -85, 55, -55, 80, 0)
+cause_cue = "stumble"
+
+[sub_resource type="Resource" id="Spikes1FailureData"]
+script = ExtResource("8_faildata")
+cause_id = "spikes_tight_1"
+cause_message = "Hit the spikes — this patch is narrower, a quick hop clears it."
+demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
+cause_cue = "recoil"
+
+[sub_resource type="Resource" id="TightGap2FailureData"]
+script = ExtResource("8_faildata")
+cause_id = "tight_gap_2"
+cause_message = "Out of control again — right after spikes, keep the jump smooth and aimed."
+demo_points = PackedVector2Array(-70, 0, -25, -65, 15, -95, 55, -60, 85, 0)
+cause_cue = "overshoot"
+
+[sub_resource type="Resource" id="Spikes2FailureData"]
+script = ExtResource("8_faildata")
+cause_id = "spikes_tight_2"
+cause_message = "Another spike patch, right at the edge — jump early, don't cut it close."
+demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
+cause_cue = "recoil"
+
+[sub_resource type="Resource" id="Gap3FailureData"]
+script = ExtResource("8_faildata")
+cause_id = "tight_gap_3"
+cause_message = "Final stretch — this is the widest gap yet, commit to a full jump."
+demo_points = PackedVector2Array(-80, 0, -30, -70, 20, -100, 65, -65, 100, 0)
+cause_cue = "overshoot"
+
+[node name="Level3" type="Node2D"]
+script = ExtResource("9_level3")
+
+[node name="GroundA" type="StaticBody2D" parent="."]
+position = Vector2(175, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundA"]
+shape = SubResource("GroundAShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundA"]
+offset_left = -175.0
+offset_top = -20.0
+offset_right = 175.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="GroundB" type="StaticBody2D" parent="."]
+position = Vector2(565, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundB"]
+shape = SubResource("GroundBShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundB"]
+offset_left = -85.0
+offset_top = -20.0
+offset_right = 85.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="GroundC" type="StaticBody2D" parent="."]
+position = Vector2(895, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundC"]
+shape = SubResource("GroundCShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundC"]
+offset_left = -105.0
+offset_top = -20.0
+offset_right = 105.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="GroundD" type="StaticBody2D" parent="."]
+position = Vector2(1305, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundD"]
+shape = SubResource("GroundDShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundD"]
+offset_left = -145.0
+offset_top = -20.0
+offset_right = 145.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="Checkpoint01" type="Area2D" parent="."]
+position = Vector2(250, 380)
+script = ExtResource("3_checkpoint")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint01"]
+shape = SubResource("CheckpointShape")
+
+[node name="Checkpoint02" type="Area2D" parent="."]
+position = Vector2(850, 380)
+script = ExtResource("3_checkpoint")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint02"]
+shape = SubResource("CheckpointShape")
+
+[node name="Checkpoint03" type="Area2D" parent="."]
+position = Vector2(1220, 380)
+script = ExtResource("3_checkpoint")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint03"]
+shape = SubResource("CheckpointShape")
+
+[node name="TightGap1Trigger" type="Area2D" parent="."]
+position = Vector2(415, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("TightGap1FailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TightGap1Trigger"]
+position = Vector2(0, 150)
+shape = SubResource("TightGap1Shape")
+
+[node name="Spikes1Trigger" type="Area2D" parent="."]
+position = Vector2(610, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("Spikes1FailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spikes1Trigger"]
+position = Vector2(0, -15)
+shape = SubResource("SpikesShape")
+
+[node name="ColorRect" type="ColorRect" parent="Spikes1Trigger"]
+offset_left = -22.5
+offset_top = -28.0
+offset_right = 22.5
+offset_bottom = 0.0
+color = Color(0.85, 0.2, 0.2, 1)
+
+[node name="TightGap2Trigger" type="Area2D" parent="."]
+position = Vector2(720, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("TightGap2FailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TightGap2Trigger"]
+position = Vector2(0, 150)
+shape = SubResource("TightGap2Shape")
+
+[node name="Spikes2Trigger" type="Area2D" parent="."]
+position = Vector2(960, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("Spikes2FailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spikes2Trigger"]
+position = Vector2(0, -15)
+shape = SubResource("SpikesShape")
+
+[node name="ColorRect" type="ColorRect" parent="Spikes2Trigger"]
+offset_left = -22.5
+offset_top = -28.0
+offset_right = 22.5
+offset_bottom = 0.0
+color = Color(0.85, 0.2, 0.2, 1)
+
+[node name="Gap3Trigger" type="Area2D" parent="."]
+position = Vector2(1080, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("Gap3FailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gap3Trigger"]
+position = Vector2(0, 150)
+shape = SubResource("Gap3Shape")
+
+[node name="LevelExit" type="Area2D" parent="."]
+position = Vector2(1400, 380)
+script = ExtResource("11_exit")
+next_level = ExtResource("12_level4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelExit"]
+shape = SubResource("CheckpointShape")
+
+[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+position = Vector2(100, 376)
+script = ExtResource("1_player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("PlayerShape")
+
+[node name="ColorRect" type="ColorRect" parent="Player"]
+offset_left = -12.0
+offset_top = -24.0
+offset_right = 12.0
+offset_bottom = 24.0
+color = Color(0.2, 0.6, 1, 1)
+script = ExtResource("10_juice")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+current = true
+
+[node name="Companion" type="Node2D" parent="." groups=["companion"]]
+position = Vector2(60, 352)
+script = ExtResource("4_companion")
+
+[node name="ColorRect" type="ColorRect" parent="Companion"]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(1, 0.8, 0.2, 1)
+script = ExtResource("10_juice")
+
+[node name="DiegeticPresenter" type="Node" parent="." groups=["diegetic_presenter"]]
+script = ExtResource("5_diegetic")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="NonDiegeticPresenter" type="Control" parent="UI" groups=["non_diegetic_presenter"]]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("6_nondiegetic")
+
+[node name="HUDLabel" type="Label" parent="UI/NonDiegeticPresenter"]
+visible = false
+anchor_right = 1.0
+offset_top = 40.0
+offset_bottom = 90.0
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+text = ""
+
+[node name="ArrowOverlay" type="Control" parent="UI/NonDiegeticPresenter"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("7_arrow")

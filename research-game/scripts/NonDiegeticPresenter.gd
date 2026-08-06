@@ -15,8 +15,8 @@ extends FailurePresenter
 ## The companion is still present in the level (it exists in both conditions)
 ## but stays neutral here - only its failure-moment behaviour differs.
 
-@export var hud_label: Label
-@export var arrow: Control
+@onready var hud_label: Label = $HUDLabel
+@onready var arrow: Control = $ArrowOverlay
 ## Optional: a UI blip. Non-positional, unlike the diegetic cue sound.
 @export var ui_sound: AudioStreamPlayer
 
@@ -43,3 +43,7 @@ func clear() -> void:
 		hud_label.visible = false
 	if arrow != null and arrow.has_method("hide_path"):
 		arrow.hide_path()
+
+	var companion := get_tree().get_first_node_in_group("companion")
+	if companion != null and companion.has_method("return_to_player"):
+		companion.return_to_player()
