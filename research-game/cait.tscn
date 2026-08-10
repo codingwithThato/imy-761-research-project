@@ -1,10 +1,21 @@
 [gd_scene format=3 uid="uid://v5eprf07dasx"]
 
 [ext_resource type="Script" uid="uid://6p1e2rrxc4vq" path="res://scripts/Player.gd" id="1_k4ef2"]
+[ext_resource type="SpriteFrames" uid="uid://3p2dorl55bls" path="res://assets/Character/CaitSpriteFrames.tres" id="2_frames"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cait"]
+size = Vector2(24, 44)
 
 [node name="Cait" type="CharacterBody2D" unique_id=360392029]
 script = ExtResource("1_k4ef2")
+sprite = NodePath("AnimatedSprite2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1536607202]
+position = Vector2(1, 25)
+shape = SubResource("RectangleShape2D_cait")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1875006511]
+sprite_frames = ExtResource("2_frames")
+animation = &"idle"
+frame = 8
+frame_progress = 0.27891436
