@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3]
+[gd_scene load_steps=33 format=3]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/Hazard.gd" id="2_hazard"]
@@ -64,6 +64,32 @@ cause_id = "spikes_no_jump_4"
 cause_message = "Walked straight into the spikes — jump over them instead."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
+
+[sub_resource type="RectangleShape2D" id="GroundEShape"]
+size = Vector2(150, 40)
+
+[sub_resource type="RectangleShape2D" id="GroundFShape"]
+size = Vector2(200, 40)
+
+[sub_resource type="RectangleShape2D" id="Gap2Shape"]
+size = Vector2(150, 300)
+
+[sub_resource type="RectangleShape2D" id="PlatformGap2Shape"]
+size = Vector2(250, 300)
+
+[sub_resource type="Resource" id="Gap2FailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_control_jump_4"
+cause_message = "One more gap after the platform — aim for a smooth, medium jump."
+demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "overshoot"
+
+[sub_resource type="Resource" id="Platform2FailureData"]
+script = ExtResource("8_faildata")
+cause_id = "platform_mistimed_2"
+cause_message = "A second, wider platform crossing — same rule: wait for it, then ride it across."
+demo_points = PackedVector2Array(-125, 0, -60, -20, 0, -20, 60, -20, 125, 0)
+cause_cue = "stumble"
 
 [node name="Level4" type="Node2D"]
 script = ExtResource("9_level4")
@@ -191,8 +217,75 @@ offset_right = 22.5
 offset_bottom = 0.0
 color = Color(0.85, 0.2, 0.2, 1)
 
+[node name="GroundE" type="StaticBody2D" parent="."]
+position = Vector2(1575, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundE"]
+shape = SubResource("GroundEShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundE"]
+offset_left = -75.0
+offset_top = -20.0
+offset_right = 75.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="GroundF" type="StaticBody2D" parent="."]
+position = Vector2(2000, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundF"]
+shape = SubResource("GroundFShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundF"]
+offset_left = -100.0
+offset_top = -20.0
+offset_right = 100.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="Checkpoint04" type="Area2D" parent="."]
+position = Vector2(1520, 380)
+script = ExtResource("3_checkpoint")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint04"]
+shape = SubResource("CheckpointShape")
+
+[node name="Gap2Trigger" type="Area2D" parent="."]
+position = Vector2(1425, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("Gap2FailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gap2Trigger"]
+position = Vector2(0, 150)
+shape = SubResource("Gap2Shape")
+
+[node name="PlatformGap2Trigger" type="Area2D" parent="."]
+position = Vector2(1775, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("Platform2FailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformGap2Trigger"]
+position = Vector2(0, 150)
+shape = SubResource("PlatformGap2Shape")
+
+[node name="MovingPlatform2" type="AnimatableBody2D" parent="."]
+position = Vector2(1670, 400)
+script = ExtResource("12_moving")
+travel = Vector2(210, 0)
+one_way_duration = 1.4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MovingPlatform2"]
+shape = SubResource("PlatformShape")
+
+[node name="ColorRect" type="ColorRect" parent="MovingPlatform2"]
+offset_left = -35.0
+offset_top = -10.0
+offset_right = 35.0
+offset_bottom = 10.0
+color = Color(0.5, 0.4, 0.7, 1)
+
 [node name="LevelExit" type="Area2D" parent="."]
-position = Vector2(1320, 380)
+position = Vector2(2050, 380)
 script = ExtResource("11_exit")
 next_level = ExtResource("13_level5")
 

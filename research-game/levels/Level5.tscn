@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3]
+[gd_scene load_steps=40 format=3]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/Hazard.gd" id="2_hazard"]
@@ -106,6 +106,29 @@ cause_id = "final_gap_5"
 cause_message = "The last and widest gap — a full-power jump clears it."
 demo_points = PackedVector2Array(-90, 0, -35, -70, 20, -100, 65, -65, 100, 0)
 cause_cue = "overshoot"
+
+[sub_resource type="RectangleShape2D" id="GroundGShape"]
+size = Vector2(150, 40)
+
+[sub_resource type="RectangleShape2D" id="GroundFinalShape"]
+size = Vector2(250, 40)
+
+[sub_resource type="RectangleShape2D" id="Gap6Shape"]
+size = Vector2(150, 300)
+
+[sub_resource type="Resource" id="Gap6FailureData"]
+script = ExtResource("8_faildata")
+cause_id = "final_gap_6"
+cause_message = "Not over yet — one more gap, same fix as always: jump right off the ledge."
+demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "stumble"
+
+[sub_resource type="Resource" id="Spikes3FailureData"]
+script = ExtResource("8_faildata")
+cause_id = "final_spikes_3"
+cause_message = "The last obstacle in the game — jump early, don't cut it close."
+demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
+cause_cue = "recoil"
 
 [node name="Level5" type="Node2D"]
 script = ExtResource("9_level5")
@@ -325,8 +348,73 @@ failure_data = SubResource("Gap5FailureData")
 position = Vector2(0, 150)
 shape = SubResource("Gap5Shape")
 
+[node name="GroundG" type="StaticBody2D" parent="."]
+position = Vector2(2175, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundG"]
+shape = SubResource("GroundGShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundG"]
+offset_left = -75.0
+offset_top = -20.0
+offset_right = 75.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="GroundFinal" type="StaticBody2D" parent="."]
+position = Vector2(2375, 420)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundFinal"]
+shape = SubResource("GroundFinalShape")
+
+[node name="ColorRect" type="ColorRect" parent="GroundFinal"]
+offset_left = -125.0
+offset_top = -20.0
+offset_right = 125.0
+offset_bottom = 20.0
+color = Color(0.28, 0.24, 0.2, 1)
+
+[node name="Checkpoint05" type="Area2D" parent="."]
+position = Vector2(2130, 380)
+script = ExtResource("3_checkpoint")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint05"]
+shape = SubResource("CheckpointShape")
+
+[node name="Checkpoint06" type="Area2D" parent="."]
+position = Vector2(2280, 380)
+script = ExtResource("3_checkpoint")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint06"]
+shape = SubResource("CheckpointShape")
+
+[node name="Gap6Trigger" type="Area2D" parent="."]
+position = Vector2(2025, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("Gap6FailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gap6Trigger"]
+position = Vector2(0, 150)
+shape = SubResource("Gap6Shape")
+
+[node name="Spikes3Trigger" type="Area2D" parent="."]
+position = Vector2(2200, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("Spikes3FailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spikes3Trigger"]
+position = Vector2(0, -15)
+shape = SubResource("SpikesShape")
+
+[node name="ColorRect" type="ColorRect" parent="Spikes3Trigger"]
+offset_left = -22.5
+offset_top = -28.0
+offset_right = 22.5
+offset_bottom = 0.0
+color = Color(0.85, 0.2, 0.2, 1)
+
 [node name="LevelExit" type="Area2D" parent="."]
-position = Vector2(1900, 380)
+position = Vector2(2450, 380)
 script = ExtResource("11_exit")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LevelExit"]
