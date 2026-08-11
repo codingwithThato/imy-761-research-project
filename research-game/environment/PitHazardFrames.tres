@@ -1,0 +1,74 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://7wkvobjglrs64"]
+
+[ext_resource type="Texture2D" uid="uid://cmamrhbtcdk1n" path="res://assets/TileMap/Waterfall (1)/waterfall (1)1.png" id="1_f01"]
+[ext_resource type="Texture2D" uid="uid://c48kcb6yolygi" path="res://assets/TileMap/Waterfall (1)/waterfall (1)2.png" id="2_f02"]
+[ext_resource type="Texture2D" uid="uid://cd4o1425ddvjb" path="res://assets/TileMap/Waterfall (1)/waterfall (1)3.png" id="3_f03"]
+[ext_resource type="Texture2D" uid="uid://yvavqk6dbkku" path="res://assets/TileMap/Waterfall (1)/waterfall (1)4.png" id="4_f04"]
+[ext_resource type="Texture2D" uid="uid://dr7p7vpm2owj" path="res://assets/TileMap/Waterfall (1)/waterfall (1)5.png" id="5_f05"]
+[ext_resource type="Texture2D" uid="uid://r8s8r27cwue0" path="res://assets/TileMap/Waterfall (1)/waterfall (1)6.png" id="6_f06"]
+[ext_resource type="Texture2D" uid="uid://bxeilsiyv6d0" path="res://assets/TileMap/Waterfall (1)/waterfall (1)7.png" id="7_f07"]
+[ext_resource type="Texture2D" uid="uid://dstq54b1vllaw" path="res://assets/TileMap/Waterfall (1)/waterfall (1)8.png" id="8_f08"]
+[ext_resource type="Texture2D" uid="uid://dcs3r8qhg57se" path="res://assets/TileMap/Waterfall (1)/waterfall (1)9.png" id="9_f09"]
+[ext_resource type="Texture2D" uid="uid://0khryaanfgu" path="res://assets/TileMap/Waterfall (1)/waterfall (1)10.png" id="10_f10"]
+[ext_resource type="Texture2D" uid="uid://djxmlqbuj7xpy" path="res://assets/TileMap/Waterfall (1)/waterfall (1)11.png" id="11_f11"]
+[ext_resource type="Texture2D" uid="uid://cpufylhthqcw1" path="res://assets/TileMap/Waterfall (1)/waterfall (1)12.png" id="12_f12"]
+[ext_resource type="Texture2D" uid="uid://cmk3wd5fr0s1m" path="res://assets/TileMap/Waterfall (1)/waterfall (1)13.png" id="13_f13"]
+[ext_resource type="Texture2D" uid="uid://c2uq2n3u75qf0" path="res://assets/TileMap/Waterfall (1)/waterfall (1)14.png" id="14_f14"]
+[ext_resource type="Texture2D" uid="uid://dnq8odesnmif6" path="res://assets/TileMap/Waterfall (1)/waterfall (1)15.png" id="15_f15"]
+[ext_resource type="Texture2D" uid="uid://cruvd4gn6ipgy" path="res://assets/TileMap/Waterfall (1)/waterfall (1)16.png" id="16_f16"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_f01")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_f02")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_f03")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_f04")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_f05")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_f06")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_f07")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_f08")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_f09")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_f10")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_f11")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_f12")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_f13")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_f14")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_f15")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_f16")
+}],
+"loop": true,
+"name": &"loop",
+"speed": 12.0
+}]
