@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Config="*uid://cv8xiawi2apcr"
 FailureController="*uid://dxm7c4iv4ywmq"
+ScreenFade="*res://scripts/ScreenFade.gd"
 
 [display]
 

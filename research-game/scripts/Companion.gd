@@ -13,7 +13,7 @@ extends Node2D
 
 @export var follow_offset: Vector2 = Vector2(-40.0, -24.0)
 @export var follow_smoothing: float = 5.0
-@export var sprite: Node2D  ## AnimatedSprite2D or Sprite2D
+@onready var sprite: CanvasItem = $ColorRect  ## AnimatedSprite2D/Sprite2D later; placeholder now
 
 enum State { FOLLOWING, DEMONSTRATING, NEUTRAL }
 
@@ -42,8 +42,8 @@ func demonstrate(world_points: PackedVector2Array, duration: float) -> void:
 	if world_points.size() < 2:
 		return
 	_state = State.DEMONSTRATING
-	_set_translucent(true)
 	_play_anim("run")
+	_set_translucent(true)
 
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
@@ -77,6 +77,7 @@ func _set_translucent(on: bool) -> void:
 		sprite.modulate.a = 0.6 if on else 1.0
 
 
+@warning_ignore("shadowed_variable_base_class")
 func _play_anim(name: String) -> void:
 	if sprite != null and sprite.has_method("play"):
 		sprite.call("play", name)
