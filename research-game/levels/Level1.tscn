@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://scripts/SpriteJuice.gd" id="10_juice"]
 [ext_resource type="Script" path="res://scripts/LevelExit.gd" id="11_exit"]
 [ext_resource type="PackedScene" path="res://levels/Level2.tscn" id="12_level2"]
+[ext_resource type="SystemFont" path="res://assets/fonts/HUDFont.tres" id="13_hudfont"]
 
 [sub_resource type="RectangleShape2D" id="PlayerShape"]
 size = Vector2(24, 48)
@@ -31,7 +32,7 @@ size = Vector2(150, 300)
 [sub_resource type="Resource" id="PitFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "pit_late_jump"
-cause_message = "Jumped too late — take off earlier."
+cause_message = "Jumped too late. Take off earlier."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "stumble"
 
@@ -50,14 +51,14 @@ size = Vector2(200, 40)
 [sub_resource type="Resource" id="Gap2FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "pit_late_jump_2"
-cause_message = "Same mistake again — take off before the edge, not after it."
+cause_message = "Same mistake again. Take off before the edge, not after it."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "stumble"
 
 [sub_resource type="Resource" id="SpikesFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "spikes_intro"
-cause_message = "Walked straight into the spikes — jump over them instead."
+cause_message = "Walked straight into the spikes. Jump over them instead."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
 
@@ -218,6 +219,7 @@ visible = false
 anchor_right = 1.0
 offset_top = 40.0
 offset_bottom = 90.0
+theme_override_fonts/font = ExtResource("13_hudfont")
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
 text = ""

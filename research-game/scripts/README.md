@@ -65,8 +65,8 @@ in `_ready()` so there's a respawn point before the first checkpoint.
 2. In the inspector, `failure_data` → New FailureData.
 3. Fill in:
    - `cause_id` — e.g. `pit_late_jump`
-   - `cause_message` — what went wrong AND what to do, e.g.
-     *"Jumped too late — take off earlier"*
+   - `cause_message` — what went wrong AND what to do, as short sentences
+     with no em dashes, e.g. *"Jumped too late. Take off earlier."*
    - `cause_cue` — `stumble` / `recoil` / `overshoot`
    - `demo_points` — the correct route, as offsets from this hazard's position
 

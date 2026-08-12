@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://scripts/LevelExit.gd" id="11_exit"]
 [ext_resource type="Script" path="res://scripts/MovingPlatform.gd" id="12_moving"]
 [ext_resource type="PackedScene" path="res://levels/Level5.tscn" id="13_level5"]
+[ext_resource type="SystemFont" path="res://assets/fonts/HUDFont.tres" id="14_hudfont"]
 
 [sub_resource type="RectangleShape2D" id="PlayerShape"]
 size = Vector2(24, 48)
@@ -47,21 +48,21 @@ size = Vector2(70, 20)
 [sub_resource type="Resource" id="Gap1FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "gap_late_jump_4"
-cause_message = "Jumped too late — take off earlier."
+cause_message = "Jumped too late. Take off earlier."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "stumble"
 
 [sub_resource type="Resource" id="PlatformFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "platform_mistimed"
-cause_message = "Jumped before the platform arrived — wait until it's under you, then ride it across."
+cause_message = "Jumped too early. Wait until the platform is under you, then ride it across."
 demo_points = PackedVector2Array(-150, 0, -80, -20, 0, -20, 80, -20, 150, 0)
 cause_cue = "stumble"
 
 [sub_resource type="Resource" id="SpikesFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "spikes_no_jump_4"
-cause_message = "Walked straight into the spikes — jump over them instead."
+cause_message = "Walked straight into the spikes. Jump over them instead."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
 
@@ -80,14 +81,14 @@ size = Vector2(250, 300)
 [sub_resource type="Resource" id="Gap2FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "gap_control_jump_4"
-cause_message = "One more gap after the platform — aim for a smooth, medium jump."
+cause_message = "One more gap after the platform. Aim for a smooth jump."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "overshoot"
 
 [sub_resource type="Resource" id="Platform2FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "platform_mistimed_2"
-cause_message = "A second, wider platform crossing — same rule: wait for it, then ride it across."
+cause_message = "A second, wider platform crossing. Same rule: wait, then ride it across."
 demo_points = PackedVector2Array(-125, 0, -60, -20, 0, -20, 60, -20, 125, 0)
 cause_cue = "stumble"
 
@@ -338,6 +339,7 @@ visible = false
 anchor_right = 1.0
 offset_top = 40.0
 offset_bottom = 90.0
+theme_override_fonts/font = ExtResource("14_hudfont")
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
 text = ""
