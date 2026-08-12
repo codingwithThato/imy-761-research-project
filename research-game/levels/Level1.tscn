@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3]
+[gd_scene format=3 uid="uid://2u7b0oe3crhi"]
 
 [ext_resource type="Script" uid="uid://6p1e2rrxc4vq" path="res://scripts/Player.gd" id="1_player"]
 [ext_resource type="Script" uid="uid://7aqo4owcqt8q" path="res://scripts/Hazard.gd" id="2_hazard"]
@@ -8,14 +8,18 @@
 [ext_resource type="Script" uid="uid://bm266tyvyfstx" path="res://scripts/NonDiegeticPresenter.gd" id="6_nondiegetic"]
 [ext_resource type="Script" uid="uid://cv1agpdryxf1t" path="res://scripts/ArrowOverlay.gd" id="7_arrow"]
 [ext_resource type="Script" uid="uid://da48jwd0i070s" path="res://scripts/FailureData.gd" id="8_faildata"]
-[ext_resource type="Script" path="res://levels/Level1.gd" id="9_level1"]
-[ext_resource type="Script" path="res://scripts/SpriteJuice.gd" id="10_juice"]
-[ext_resource type="Script" path="res://scripts/LevelExit.gd" id="11_exit"]
+[ext_resource type="Script" uid="uid://c4f2xfoj1slck" path="res://levels/Level1.gd" id="9_level1"]
+[ext_resource type="Script" uid="uid://c8h2lnapemo0g" path="res://scripts/LevelExit.gd" id="11_exit"]
 [ext_resource type="PackedScene" path="res://levels/Level2.tscn" id="12_level2"]
 [ext_resource type="SystemFont" path="res://assets/fonts/HUDFont.tres" id="13_hudfont"]
-
-[sub_resource type="RectangleShape2D" id="PlayerShape"]
-size = Vector2(24, 48)
+[ext_resource type="SpriteFrames" uid="uid://3p2dorl55bls" path="res://assets/Character/CaitSpriteFrames.tres" id="90_caitframes"]
+[ext_resource type="Texture2D" uid="uid://dj402n4s77en5" path="res://assets/TileMap/Ground.png" id="91_groundtex"]
+[ext_resource type="Texture2D" uid="uid://dn20ewdfkh4o8" path="res://assets/TileMap/Spikes.png" id="92_spikestex"]
+[ext_resource type="SpriteFrames" path="res://assets/dog/DogSpriteFrames.tres" id="94_dogframes"]
+[ext_resource type="Texture2D" uid="uid://cbsj317jvvfph" path="res://assets/Backgroud/backgroud (1).png" id="95_bgsky"]
+[ext_resource type="Texture2D" uid="uid://bosutxg6k3wj1" path="res://assets/Backgroud/backgroud (3).png" id="97_bgruins"]
+[ext_resource type="SpriteFrames" uid="uid://c7e0xra3s4hi6" path="res://environment/WaterfallPanelFrames.tres" id="98_waterfall"]
+[ext_resource type="Texture2D" uid="uid://sn0dmnocgowf" path="res://assets/TileMap/Tilemap (1).png" id="99_decor"]
 
 [sub_resource type="RectangleShape2D" id="GroundLeftShape"]
 size = Vector2(400, 40)
@@ -26,9 +30,6 @@ size = Vector2(450, 40)
 [sub_resource type="RectangleShape2D" id="CheckpointShape"]
 size = Vector2(20, 80)
 
-[sub_resource type="RectangleShape2D" id="PitShape"]
-size = Vector2(150, 300)
-
 [sub_resource type="Resource" id="PitFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "pit_late_jump"
@@ -36,14 +37,11 @@ cause_message = "Jumped too late. Take off earlier."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "stumble"
 
-[sub_resource type="RectangleShape2D" id="GroundExtra1Shape"]
-size = Vector2(200, 40)
-
-[sub_resource type="RectangleShape2D" id="Gap2Shape"]
+[sub_resource type="RectangleShape2D" id="PitShape"]
 size = Vector2(150, 300)
 
-[sub_resource type="RectangleShape2D" id="SpikesShape"]
-size = Vector2(45, 28)
+[sub_resource type="RectangleShape2D" id="GroundExtra1Shape"]
+size = Vector2(200, 40)
 
 [sub_resource type="RectangleShape2D" id="GroundFinalShape"]
 size = Vector2(200, 40)
@@ -55,6 +53,9 @@ cause_message = "Same mistake again. Take off before the edge, not after it."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "stumble"
 
+[sub_resource type="RectangleShape2D" id="Gap2Shape"]
+size = Vector2(150, 300)
+
 [sub_resource type="Resource" id="SpikesFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "spikes_intro"
@@ -62,169 +63,261 @@ cause_message = "Walked straight into the spikes. Jump over them instead."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
 
-[node name="Level1" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="SpikesShape"]
+size = Vector2(45, 28)
+
+[sub_resource type="Resource" id="EdgeFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "ran_off_start_edge"
+cause_message = "Walked backward off the ledge — keep moving toward the platform, not away from it."
+demo_points = PackedVector2Array(-50, 0, 50, 0)
+cause_cue = "stumble"
+
+[sub_resource type="RectangleShape2D" id="EdgeShape"]
+size = Vector2(150, 300)
+
+[sub_resource type="RectangleShape2D" id="PlayerShape"]
+size = Vector2(24, 48)
+
+[node name="Level1" type="Node2D" unique_id=661161918]
 script = ExtResource("9_level1")
 
-[node name="GroundLeft" type="StaticBody2D" parent="."]
+[node name="Background" type="Node2D" parent="." unique_id=964928833]
+
+[node name="Waterfall1" type="AnimatedSprite2D" parent="Background" unique_id=970714438]
+z_index = -10
+position = Vector2(477, 415)
+scale = Vector2(1.027429, 2.3699284)
+sprite_frames = ExtResource("98_waterfall")
+animation = &"loop"
+autoplay = "loop"
+
+[node name="Waterfall3" type="AnimatedSprite2D" parent="Background" unique_id=1049880415]
+visible = false
+z_index = -10
+position = Vector2(1076, 415)
+scale = Vector2(1.027429, 2.3699284)
+sprite_frames = ExtResource("98_waterfall")
+animation = &"loop"
+autoplay = "loop"
+
+[node name="Sky" type="Sprite2D" parent="Background" unique_id=1061700428]
+modulate = Color(1.35, 1.3, 1.15, 1)
+z_index = -100
+texture_repeat = 2
+position = Vector2(840.1355, 353.32352)
+scale = Vector2(2.8442416, 2.657353)
+texture = ExtResource("95_bgsky")
+region_enabled = true
+region_rect = Rect2(0, 0, 1950, 360)
+
+[node name="Ruins" type="Sprite2D" parent="Background" unique_id=823101818]
+modulate = Color(1.35, 1.3, 1.15, 1)
+z_index = -90
+texture_repeat = 2
+position = Vector2(839.1355, 402.32352)
+scale = Vector2(2.8442416, 2.657353)
+texture = ExtResource("97_bgruins")
+region_enabled = true
+region_rect = Rect2(0, 0, 1950, 360)
+
+[node name="Decor1" type="Sprite2D" parent="Background" unique_id=1293128583]
+z_index = -10
+position = Vector2(60, 316)
+texture = ExtResource("99_decor")
+region_enabled = true
+region_rect = Rect2(4, 0, 39, 168)
+
+[node name="Decor2" type="Sprite2D" parent="Background" unique_id=465220608]
+z_index = -10
+position = Vector2(340, 316)
+texture = ExtResource("99_decor")
+region_enabled = true
+region_rect = Rect2(48, 0, 48, 168)
+
+[node name="Decor3" type="Sprite2D" parent="Background" unique_id=1583409340]
+z_index = -10
+position = Vector2(700, 297)
+texture = ExtResource("99_decor")
+region_enabled = true
+region_rect = Rect2(420, 202, 60, 206)
+
+[node name="Decor4" type="Sprite2D" parent="Background" unique_id=1287951845]
+z_index = -10
+position = Vector2(1420, 300)
+texture = ExtResource("99_decor")
+region_enabled = true
+region_rect = Rect2(485, 208, 88, 200)
+
+[node name="GroundLeft" type="StaticBody2D" parent="." unique_id=538861757]
 position = Vector2(200, 420)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundLeft"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundLeft" unique_id=1421162630]
 shape = SubResource("GroundLeftShape")
 
-[node name="ColorRect" type="ColorRect" parent="GroundLeft"]
-offset_left = -200.0
-offset_top = -20.0
-offset_right = 200.0
-offset_bottom = 20.0
-color = Color(0.28, 0.24, 0.2, 1)
+[node name="Sprite2D" type="Sprite2D" parent="GroundLeft" unique_id=888691425]
+texture_repeat = 2
+position = Vector2(0, 42.5)
+texture = ExtResource("91_groundtex")
+region_enabled = true
+region_rect = Rect2(0, 0, 400, 125)
 
-[node name="GroundRight" type="StaticBody2D" parent="."]
+[node name="GroundRight" type="StaticBody2D" parent="." unique_id=829704827]
 position = Vector2(775, 420)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundRight"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundRight" unique_id=691984597]
 shape = SubResource("GroundRightShape")
 
-[node name="ColorRect" type="ColorRect" parent="GroundRight"]
-offset_left = -225.0
-offset_top = -20.0
-offset_right = 225.0
-offset_bottom = 20.0
-color = Color(0.28, 0.24, 0.2, 1)
+[node name="Sprite2D" type="Sprite2D" parent="GroundRight" unique_id=1171902328]
+texture_repeat = 2
+position = Vector2(0, 42.5)
+texture = ExtResource("91_groundtex")
+region_enabled = true
+region_rect = Rect2(0, 0, 450, 125)
 
-[node name="Checkpoint01" type="Area2D" parent="."]
+[node name="Checkpoint01" type="Area2D" parent="." unique_id=1051532769]
 position = Vector2(300, 380)
 script = ExtResource("3_checkpoint")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint01"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint01" unique_id=1027016650]
 shape = SubResource("CheckpointShape")
 
-[node name="PitTrigger" type="Area2D" parent="."]
+[node name="PitTrigger" type="Area2D" parent="." unique_id=1769020841]
 position = Vector2(475, 400)
 script = ExtResource("2_hazard")
 failure_data = SubResource("PitFailureData")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PitTrigger"]
-position = Vector2(0, 150)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PitTrigger" unique_id=122448348]
+position = Vector2(0, 222)
 shape = SubResource("PitShape")
 
-[node name="GroundExtra1" type="StaticBody2D" parent="."]
+[node name="GroundExtra1" type="StaticBody2D" parent="." unique_id=194163675]
 position = Vector2(1250, 420)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundExtra1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundExtra1" unique_id=1452979488]
 shape = SubResource("GroundExtra1Shape")
 
-[node name="ColorRect" type="ColorRect" parent="GroundExtra1"]
-offset_left = -100.0
-offset_top = -20.0
-offset_right = 100.0
-offset_bottom = 20.0
-color = Color(0.28, 0.24, 0.2, 1)
+[node name="Sprite2D" type="Sprite2D" parent="GroundExtra1" unique_id=1839282837]
+texture_repeat = 2
+position = Vector2(0, 42.5)
+texture = ExtResource("91_groundtex")
+region_enabled = true
+region_rect = Rect2(0, 0, 200, 125)
 
-[node name="GroundFinal" type="StaticBody2D" parent="."]
+[node name="GroundFinal" type="StaticBody2D" parent="." unique_id=84637394]
 position = Vector2(1450, 420)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundFinal"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GroundFinal" unique_id=517549338]
 shape = SubResource("GroundFinalShape")
 
-[node name="ColorRect" type="ColorRect" parent="GroundFinal"]
-offset_left = -100.0
-offset_top = -20.0
-offset_right = 100.0
-offset_bottom = 20.0
-color = Color(0.28, 0.24, 0.2, 1)
+[node name="Sprite2D" type="Sprite2D" parent="GroundFinal" unique_id=1128858967]
+texture_repeat = 2
+position = Vector2(0, 42.5)
+texture = ExtResource("91_groundtex")
+region_enabled = true
+region_rect = Rect2(0, 0, 200, 125)
 
-[node name="Checkpoint02" type="Area2D" parent="."]
+[node name="Checkpoint02" type="Area2D" parent="." unique_id=1529842732]
 position = Vector2(1220, 380)
 script = ExtResource("3_checkpoint")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint02"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint02" unique_id=1269486900]
 shape = SubResource("CheckpointShape")
 
-[node name="Gap2Trigger" type="Area2D" parent="."]
+[node name="Gap2Trigger" type="Area2D" parent="." unique_id=1239913945]
 position = Vector2(1075, 400)
 script = ExtResource("2_hazard")
 failure_data = SubResource("Gap2FailureData")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Gap2Trigger"]
-position = Vector2(0, 150)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gap2Trigger" unique_id=844118514]
+position = Vector2(1, 229)
 shape = SubResource("Gap2Shape")
 
-[node name="SpikesTrigger" type="Area2D" parent="."]
+[node name="SpikesTrigger" type="Area2D" parent="." unique_id=1868440335]
 position = Vector2(1300, 400)
 script = ExtResource("2_hazard")
 failure_data = SubResource("SpikesFailureData")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpikesTrigger"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpikesTrigger" unique_id=1082223385]
 position = Vector2(0, -15)
 shape = SubResource("SpikesShape")
 
-[node name="ColorRect" type="ColorRect" parent="SpikesTrigger"]
-offset_left = -22.5
-offset_top = -28.0
-offset_right = 22.5
-offset_bottom = 0.0
-color = Color(0.85, 0.2, 0.2, 1)
+[node name="Sprite2D" type="Sprite2D" parent="SpikesTrigger" unique_id=1550471449]
+position = Vector2(0, -4)
+scale = Vector2(0.849057, 0.875)
+texture = ExtResource("92_spikestex")
 
-[node name="LevelExit" type="Area2D" parent="."]
+[node name="LevelExit" type="Area2D" parent="." unique_id=1914474581]
 position = Vector2(1500, 380)
 script = ExtResource("11_exit")
 next_level = ExtResource("12_level2")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelExit"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelExit" unique_id=820638718]
 shape = SubResource("CheckpointShape")
 
-[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+[node name="EdgeTrigger" type="Area2D" parent="." unique_id=1101331798]
+position = Vector2(-75, 400)
+script = ExtResource("2_hazard")
+failure_data = SubResource("EdgeFailureData")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EdgeTrigger" unique_id=1806336591]
+position = Vector2(0, 225)
+shape = SubResource("EdgeShape")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=317108354 groups=["player"]]
 position = Vector2(100, 376)
 script = ExtResource("1_player")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1047585930]
 shape = SubResource("PlayerShape")
 
-[node name="ColorRect" type="ColorRect" parent="Player"]
-offset_left = -12.0
-offset_top = -24.0
-offset_right = 12.0
-offset_bottom = 24.0
-color = Color(0.2, 0.6, 1, 1)
-script = ExtResource("10_juice")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player" unique_id=332320818]
+position = Vector2(0, -22)
+sprite_frames = ExtResource("90_caitframes")
+animation = &"idle"
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
-current = true
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1436902346]
 
-[node name="Companion" type="Node2D" parent="." groups=["companion"]]
-position = Vector2(60, 352)
+[node name="Companion" type="Node2D" parent="." unique_id=189822921 groups=["companion"]]
+position = Vector2(60, 400)
 script = ExtResource("4_companion")
 
-[node name="ColorRect" type="ColorRect" parent="Companion"]
-offset_left = -8.0
-offset_top = -8.0
-offset_right = 8.0
-offset_bottom = 8.0
-color = Color(1, 0.8, 0.2, 1)
-script = ExtResource("10_juice")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Companion" unique_id=479379089]
+position = Vector2(0, -5)
+scale = Vector2(0.25, 0.25)
+sprite_frames = ExtResource("94_dogframes")
+animation = &"idle"
 
-[node name="DiegeticPresenter" type="Node" parent="." groups=["diegetic_presenter"]]
+[node name="DiegeticPresenter" type="Node" parent="." unique_id=203784270 groups=["diegetic_presenter"]]
 script = ExtResource("5_diegetic")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=1907255249]
 
-[node name="NonDiegeticPresenter" type="Control" parent="UI" groups=["non_diegetic_presenter"]]
+[node name="NonDiegeticPresenter" type="Control" parent="UI" unique_id=329986677 groups=["non_diegetic_presenter"]]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("6_nondiegetic")
 
-[node name="HUDLabel" type="Label" parent="UI/NonDiegeticPresenter"]
+[node name="HUDLabel" type="Label" parent="UI/NonDiegeticPresenter" unique_id=1395076801]
 visible = false
+layout_mode = 0
 anchor_right = 1.0
 offset_top = 40.0
 offset_bottom = 90.0
 theme_override_fonts/font = ExtResource("13_hudfont")
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
-text = ""
 
-[node name="ArrowOverlay" type="Control" parent="UI/NonDiegeticPresenter"]
+[node name="ArrowOverlay" type="Control" parent="UI/NonDiegeticPresenter" unique_id=1867560249]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("7_arrow")

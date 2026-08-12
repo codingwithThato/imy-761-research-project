@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bphjhjc0qopn4"]
+
+[ext_resource type="Texture2D" path="res://assets/TileMap/PlatformSlab.png" id="1_tex"]
+
+[node name="MovingPlatform" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_tex")

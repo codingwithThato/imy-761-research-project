@@ -11,9 +11,9 @@ extends Node2D
 ## affordance in costume, and the condition would arguably be spatial rather
 ## than diegetic (Fagerholt and Lorentzon, 2009).
 
-@export var follow_offset: Vector2 = Vector2(-40.0, -24.0)
+@export var follow_offset: Vector2 = Vector2(-40.0, 24.0)  ## ground-level, dog-sized companion
 @export var follow_smoothing: float = 5.0
-@onready var sprite: CanvasItem = $ColorRect  ## AnimatedSprite2D/Sprite2D later; placeholder now
+@onready var sprite: CanvasItem = $AnimatedSprite2D
 
 enum State { FOLLOWING, DEMONSTRATING, NEUTRAL }
 
@@ -34,6 +34,7 @@ func _process(delta: float) -> void:
 		_player = get_tree().get_first_node_in_group("player")
 		return
 	var target: Vector2 = _player.global_position + follow_offset
+	_face(target.x - global_position.x)
 	global_position = global_position.lerp(target, clampf(follow_smoothing * delta, 0.0, 1.0))
 
 
@@ -44,6 +45,7 @@ func demonstrate(world_points: PackedVector2Array, duration: float) -> void:
 	_state = State.DEMONSTRATING
 	_play_anim("run")
 	_set_translucent(true)
+	_face(world_points[world_points.size() - 1].x - world_points[0].x)
 
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
@@ -75,6 +77,13 @@ func return_to_player() -> void:
 func _set_translucent(on: bool) -> void:
 	if sprite != null:
 		sprite.modulate.a = 0.6 if on else 1.0
+
+
+## Flips the sprite to face the direction of travel. Matches Player.gd's
+## left/right flip so the dog doesn't visibly walk backward.
+func _face(dir: float) -> void:
+	if sprite != null and absf(dir) > 1.0:
+		sprite.scale.x = absf(sprite.scale.x) * signf(dir)
 
 
 @warning_ignore("shadowed_variable_base_class")

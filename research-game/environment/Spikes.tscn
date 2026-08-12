@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://6mef7t7u6g17"]
+
+[ext_resource type="Texture2D" uid="uid://dn20ewdfkh4o8" path="res://assets/TileMap/Spikes.png" id="1_tex"]
+
+[node name="Spikes" type="Node2D" unique_id=972227891]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1040490850]
+texture = ExtResource("1_tex")
