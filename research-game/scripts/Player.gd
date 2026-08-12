@@ -13,7 +13,7 @@ extends CharacterBody2D
 @export var gravity: float = 1100.0
 @export var coyote_time: float = 0.10      ## forgiveness after leaving a ledge
 @export var jump_buffer: float = 0.10      ## forgiveness for early jump press
-@onready var sprite: CanvasItem = $ColorRect  ## AnimatedSprite2D/Sprite2D later; placeholder now
+@onready var sprite: CanvasItem = $AnimatedSprite2D
 
 var _locked := false
 var _coyote := 0.0
