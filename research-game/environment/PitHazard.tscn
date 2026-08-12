@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://km01jxeurodcv"]
+
+[ext_resource type="SpriteFrames" uid="uid://7wkvobjglrs64" path="res://environment/PitHazardFrames.tres" id="1_frames"]
+
+[node name="PitHazard" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_frames")
+animation = &"loop"
+autoplay = "loop"
