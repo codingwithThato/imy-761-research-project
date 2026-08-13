@@ -1,7 +1,21 @@
-[gd_scene format=3 uid="uid://b6srxwjk12ow3"]
+[gd_scene load_steps=5 format=3 uid="uid://b6srxwjk12ow3"]
 
 [ext_resource type="Script" uid="uid://doytubk8e6fg" path="res://scripts/Launcher.gd" id="1_launcher"]
 [ext_resource type="PackedScene" path="res://levels/Level1.tscn" id="2_level1"]
+[ext_resource type="Texture2D" path="res://assets/Backgroud/backgroud (1).png" id="3_bgsky"]
+[ext_resource type="Texture2D" path="res://assets/Backgroud/backgroud (3).png" id="4_bgruins"]
+
+[sub_resource type="StyleBoxFlat" id="MenuPanelStyle"]
+bg_color = Color(0.16, 0.2, 0.26, 0.94)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.05, 0.06, 0.1, 1.0)
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 28.0
+content_margin_bottom = 24.0
 
 [node name="Launcher" type="Control" unique_id=537337537]
 layout_mode = 3
@@ -11,23 +25,50 @@ anchor_bottom = 1.0
 script = ExtResource("1_launcher")
 first_level = ExtResource("2_level1")
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1527144116]
-layout_mode = 0
+[node name="BackgroundSky" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_bgsky")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=340512960]
+[node name="BackgroundRuins" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_bgruins")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1527144116]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuPanel" type="PanelContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("MenuPanelStyle")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MenuPanel" unique_id=340512960]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 14
 
-[node name="CodeField" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=340913514]
-layout_mode = 2
-placeholder_text = "Participant code"
-
-[node name="ConditionPicker" type="OptionButton" parent="CenterContainer/VBoxContainer" unique_id=701489507]
+[node name="ConditionPicker" type="OptionButton" parent="CenterContainer/MenuPanel/VBoxContainer" unique_id=701489507]
 layout_mode = 2
 
-[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=2086282661]
+[node name="StartButton" type="Button" parent="CenterContainer/MenuPanel/VBoxContainer" unique_id=2086282661]
 layout_mode = 2
 text = "Start"
