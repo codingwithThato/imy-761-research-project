@@ -89,11 +89,17 @@ func trigger_failure(data: FailureData, origin: Vector2) -> void:
 		if _player.has_method("play_fall_reaction"):
 			_player.play_fall_reaction()
 		await get_tree().create_timer(Config.FALL_REACT_TIME).timeout
+		if not is_instance_valid(_player):
+			_busy = false
+			return
 		if _player.has_method("hide"):
 			_player.hide()
 
 	# 2. Wait the shared onset delay.
 	await get_tree().create_timer(Config.FEEDBACK_ONSET).timeout
+	if not is_instance_valid(_player):
+		_busy = false
+		return
 
 	# 3. BRANCH - the only condition-dependent line in the whole pipeline.
 	var presenter := _active_presenter()
@@ -105,8 +111,11 @@ func trigger_failure(data: FailureData, origin: Vector2) -> void:
 
 	# 4. Hold the feedback for the shared duration.
 	await get_tree().create_timer(Config.FEEDBACK_DURATION).timeout
+	if not is_instance_valid(_player):
+		_busy = false
+		return
 
-	if presenter != null and presenter.has_method("clear"):
+	if presenter != null and is_instance_valid(presenter) and presenter.has_method("clear"):
 		presenter.clear()
 
 	# 5. Respawn at the last checkpoint (same recovery cost in both conditions).
@@ -115,6 +124,9 @@ func trigger_failure(data: FailureData, origin: Vector2) -> void:
 
 	# 6. Settle, then return control.
 	await get_tree().create_timer(Config.RESPAWN_SETTLE).timeout
+	if not is_instance_valid(_player):
+		_busy = false
+		return
 
 	if _player.has_method("set_locked"):
 		_player.set_locked(false)
