@@ -27,6 +27,11 @@ func _ready() -> void:
 	_player = get_tree().get_first_node_in_group("player")
 
 
+## Below this, the dog is close enough to its follow spot to be considered
+## "caught up" and idles instead of running.
+const CATCH_UP_DISTANCE := 12.0
+
+
 func _process(delta: float) -> void:
 	if _state != State.FOLLOWING:
 		return
@@ -35,7 +40,13 @@ func _process(delta: float) -> void:
 		return
 	var target: Vector2 = _player.global_position + follow_offset
 	_face(target.x - global_position.x)
+	_play_anim("run" if global_position.distance_to(target) > CATCH_UP_DISTANCE else "idle")
 	global_position = global_position.lerp(target, clampf(follow_smoothing * delta, 0.0, 1.0))
+
+
+## Height (px) a route has to rise above its start point before it reads as
+## a jump rather than a run - matches the arcs authored into demo_points.
+const JUMP_ARC_HEIGHT := 20.0
 
 
 ## DIEGETIC: walk the correct route through the obstacle.
@@ -43,7 +54,7 @@ func demonstrate(world_points: PackedVector2Array, duration: float) -> void:
 	if world_points.size() < 2:
 		return
 	_state = State.DEMONSTRATING
-	_play_anim("run")
+	_play_anim("jump" if _has_vertical_arc(world_points) else "run")
 	_set_translucent(true)
 	_face(world_points[world_points.size() - 1].x - world_points[0].x)
 
@@ -62,7 +73,7 @@ func demonstrate(world_points: PackedVector2Array, duration: float) -> void:
 func stay_neutral() -> void:
 	_state = State.NEUTRAL
 	_set_translucent(false)
-	_play_anim("idle")
+	_play_anim("sit")
 
 
 ## Called at the end of the feedback window in both conditions.
@@ -77,6 +88,16 @@ func return_to_player() -> void:
 func _set_translucent(on: bool) -> void:
 	if sprite != null:
 		sprite.modulate.a = 0.6 if on else 1.0
+
+
+## True if any point rises more than JUMP_ARC_HEIGHT above the route's start
+## - i.e. the route has a jump-like arc rather than being a flat walk.
+func _has_vertical_arc(points: PackedVector2Array) -> bool:
+	var base_y: float = points[0].y
+	for p in points:
+		if base_y - p.y > JUMP_ARC_HEIGHT:
+			return true
+	return false
 
 
 ## Flips the sprite to face the direction of travel. Matches Player.gd's

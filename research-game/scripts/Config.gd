@@ -13,7 +13,6 @@ enum Condition { DIEGETIC, NON_DIEGETIC }
 
 # --- Session state (set on the launcher screen, before play) ---
 var condition: Condition = Condition.DIEGETIC
-var participant_code: String = ""
 
 # --- Equivalence constants: IDENTICAL IN BOTH CONDITIONS ---
 ## Delay between the death and the feedback appearing.
