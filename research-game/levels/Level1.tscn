@@ -63,6 +63,7 @@ cause_id = "spikes_intro"
 cause_message = "Hit the spikes. Jump over them."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
+hides_player = false
 
 [sub_resource type="RectangleShape2D" id="SpikesShape"]
 size = Vector2(45, 28)

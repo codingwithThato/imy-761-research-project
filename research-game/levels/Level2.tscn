@@ -62,6 +62,7 @@ cause_id = "spikes_no_jump"
 cause_message = "Hit the spikes. Jump over them."
 demo_points = PackedVector2Array(-40, 0, -10, -70, 20, -70, 50, 0)
 cause_cue = "recoil"
+hides_player = false
 
 [sub_resource type="Resource" id="Gap2FailureData"]
 script = ExtResource("8_faildata")
@@ -89,6 +90,7 @@ cause_id = "spikes_no_jump_2"
 cause_message = "Another spike patch. Jump over it."
 demo_points = PackedVector2Array(-40, 0, -10, -70, 20, -70, 50, 0)
 cause_cue = "recoil"
+hides_player = false
 
 [sub_resource type="RectangleShape2D" id="EdgeShape"]
 size = Vector2(150, 300)

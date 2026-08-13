@@ -69,7 +69,15 @@ func set_locked(value: bool) -> void:
 func respawn_at(pos: Vector2) -> void:
 	global_position = pos
 	velocity = Vector2.ZERO
+	show()
 	_play("idle")
+
+
+## Called by FailureController for any failure where she falls out of view
+## (pit/gap/edge). A brief universal reaction before she vanishes - not a
+## cause cue, so it plays identically in both conditions.
+func play_fall_reaction() -> void:
+	_play("stumble")
 
 
 ## DIEGETIC condition only: the in-world reaction that communicates the cause.

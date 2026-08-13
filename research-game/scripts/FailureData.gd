@@ -31,6 +31,14 @@ extends Resource
 ## placeholder for "no cue".)
 @export_enum("none", "stumble", "recoil", "overshoot") var cause_cue: String = "none"
 
+## Whether the player is hidden while this failure plays out. True for
+## hazards where she falls out of view (pits, gaps, the start edge) - there
+## is nothing useful to see mid-fall, and being frozen mid-air while the
+## companion demonstrates elsewhere reads as broken. False for hazards where
+## she stays put and reacts in view (e.g. spikes), where the reaction cue
+## itself needs to be visible. Identical in both conditions.
+@export var hides_player: bool = true
+
 
 ## Converts the authored offsets into world-space points.
 func world_points(origin: Vector2) -> PackedVector2Array:

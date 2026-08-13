@@ -83,6 +83,15 @@ func trigger_failure(data: FailureData, origin: Vector2) -> void:
 	if _player.has_method("set_locked"):
 		_player.set_locked(true)
 
+	# 1b. Fall-type failures: a brief stumble reaction, then hide her - same
+	# in both conditions (see FailureData.hides_player).
+	if data.hides_player:
+		if _player.has_method("play_fall_reaction"):
+			_player.play_fall_reaction()
+		await get_tree().create_timer(Config.FALL_REACT_TIME).timeout
+		if _player.has_method("hide"):
+			_player.hide()
+
 	# 2. Wait the shared onset delay.
 	await get_tree().create_timer(Config.FEEDBACK_ONSET).timeout
 
