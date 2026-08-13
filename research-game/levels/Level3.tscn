@@ -67,6 +67,7 @@ cause_id = "spikes_tight_1"
 cause_message = "Hit the spikes. This patch is narrower. A quick hop clears it."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
+hides_player = false
 
 [sub_resource type="Resource" id="TightGap2FailureData"]
 script = ExtResource("8_faildata")
@@ -81,6 +82,7 @@ cause_id = "spikes_tight_2"
 cause_message = "Another spike patch, right at the edge. Jump early."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
+hides_player = false
 
 [sub_resource type="Resource" id="Gap3FailureData"]
 script = ExtResource("8_faildata")
@@ -108,6 +110,7 @@ cause_id = "spikes_tight_3"
 cause_message = "Last spike patch. Jump early. This margin is tight."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
+hides_player = false
 
 [sub_resource type="RectangleShape2D" id="EdgeShape"]
 size = Vector2(150, 300)

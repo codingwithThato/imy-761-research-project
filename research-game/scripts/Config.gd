@@ -24,6 +24,9 @@ const FEEDBACK_DURATION := 2.0
 const DEMO_DURATION := 1.2
 ## Pause after respawn before the player regains control.
 const RESPAWN_SETTLE := 0.3
+## How long the stumble reaction plays before a player who fell out of view
+## (pit/gap/edge) is hidden. Identical in both conditions.
+const FALL_REACT_TIME := 0.25
 
 ## Total time the player is without input on any failure.
 ## Same in both conditions, by construction.
@@ -44,5 +47,6 @@ func dump_timings() -> void:
 	print("feedback duration    : %.3f s" % FEEDBACK_DURATION)
 	print("demo duration        : %.3f s" % DEMO_DURATION)
 	print("respawn settle       : %.3f s" % RESPAWN_SETTLE)
+	print("fall reaction (pit/gap/edge only): %.3f s" % FALL_REACT_TIME)
 	print("total input lock     : %.3f s" % total_lock_time())
 	print("---------------------------------------------------------------")

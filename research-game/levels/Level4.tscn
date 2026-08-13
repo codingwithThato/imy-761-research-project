@@ -77,6 +77,7 @@ cause_id = "spikes_no_jump_4"
 cause_message = "Walked straight into the spikes. Jump over them instead."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
+hides_player = false
 
 [sub_resource type="RectangleShape2D" id="GroundEShape"]
 size = Vector2(150, 40)
