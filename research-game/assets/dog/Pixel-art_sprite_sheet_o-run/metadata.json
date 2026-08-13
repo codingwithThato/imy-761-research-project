@@ -1,0 +1,36 @@
+{
+  "group_id": "1edb00ef-4c73-494e-9cd2-44c90ee47511",
+  "states": [
+    {
+      "character": {
+        "id": "108b5812-18ce-4fe0-b662-868d023a7e64",
+        "name": "run",
+        "prompt": "Pixel-art sprite sheet of a small dog companion character, matching the exact style of an existing character sheet in the same game.  STYLE - Flat-shaded 2D pixel art, no hard black outline \u2014 shapes are separated by   flat color blocks and one shade of soft dark shadow per material, same as   the reference character. - Chibi/game-cute proportions: compact, slightly oversized head relative to   body, simple facial features (no fine detail at this resolution). - Side view / profile, facing RIGHT by default (the game engine flips the   sprite horizontally in code for left-facing movement, so only a right-   facing version is needed). - Clean pixels, no anti-aliasing gradients, no dithering \u2014 flat regions of   exact palette colors only, consistent with a limited retro palette.  CANVAS / GRID - 96x96 px per animation frame, transparent background. - The character silhouette should occupy roughly the bottom 40px of the   96px-tall cell and about 28px of width at rest, centered horizontally,   standing on an implied ground line near the bottom of the cell (leave a   few px of transparent margin below the feet/paws, not flush to the very   edge) \u2014 this matches how the human character is seated in her cells.  PALETTE (reuse these exact colors so the two characters read as one world; introduce 3-5 new fur/collar colors but keep this exact set for anything that should visually \"match\" the human character, e.g. a collar/bandana in her hair color reads as a matching accessory):   Hair/hero-color (use for a bandana or collar, not fur): #bf0b6e, #f39ec8, #f22d99   Outfit green (optional trim/collar tag): #016646, #003529   Outfit purple/plum (optional trim): #884980, #562275, #390a52, #23083b, #761479, #520345   Skin/highlight tone: #fbbea7   Shadow tones: #07191d, #020516   Rim highlight: #f0f0f8 New fur colors: your choice, but keep it to 2-3 flat tones + 1 shadow tone, same low color-count philosophy as the reference (17 total colors on her whole sheet).  SPRITE SHEET LAYOUT (pack tightly, no gaps between rows/frames, this exact row order so it can be sliced with egions):    Row 0 (y=0):     idle     \u2014 10 fre breathing/tail                     wag/ear twitch, weight shifting slightly, calm.   Row 1 (y=96):    run      \u2014 10 frl quadruped                     gallop cycle, ears back, low energetic stride.   Row 2 (y=192):   jump     \u2014 7 fra crouch                     anticipation (legs bunched under body) into a leap with                     legs extended/t   Row 3 (y=288):   stumble  \u2014 6 frames, plays once, ~10 fps \u2014 trips forward,                     nose/chest pitcall dust puff,                     ears flop \u2014 reads as \"misjudged a jump, tripped\".   Row 4 (y=384):   recoil   \u2014 7 fra snaps backward                     sharply, ears pinned flat, startled/yelp pose \u2014 reads as                     \"hit something\"   Row 5 (y=480):   overshoot \u2014 5 frames, plays once, ~10 fps \u2014 leans too far                     forward mid-strcts backward \u2014                     reads as \"went out of control, overcompensated\".  Total canvas: 960x576 px (10 columns x 6 rows of 96x96 cells; unused cells in shorter rows left fully transpar  CRITICAL REQUIREMENT: idle/run/jumpneutral at a glance, while stumble, recoil, and overshoot must be three CLEARLY DISTINCT silhouettes from each other and froayer needs to tell them apart instantly from shape alone, no color-reading required.  ",
+        "size": {
+          "width": 92,
+          "height": 92
+        },
+        "template_id": "dog",
+        "directions": 8,
+        "view": "side",
+        "created_at": "2026-08-12T20:25:20.238161+00:00"
+      },
+      "folder": "run",
+      "frames": {
+        "rotations": {
+          "south": "run/rotations/south.png",
+          "south-east": "run/rotations/south-east.png",
+          "east": "run/rotations/east.png",
+          "north-east": "run/rotations/north-east.png",
+          "north": "run/rotations/north.png",
+          "north-west": "run/rotations/north-west.png",
+          "west": "run/rotations/west.png",
+          "south-west": "run/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-08-12T20:35:06.812223"
+}

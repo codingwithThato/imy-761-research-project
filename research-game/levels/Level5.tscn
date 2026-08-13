@@ -22,6 +22,7 @@
 [ext_resource type="Texture2D" path="res://assets/Backgroud/backgroud (3).png" id="97_bgruins"]
 [ext_resource type="SpriteFrames" path="res://environment/WaterfallPanelFrames.tres" id="98_waterfall"]
 [ext_resource type="Texture2D" path="res://assets/TileMap/Tilemap (1).png" id="99_decor"]
+[ext_resource type="PackedScene" path="res://ui/QuitButton.tscn" id="200_quit"]
 
 [sub_resource type="RectangleShape2D" id="PlayerShape"]
 size = Vector2(24, 48)
@@ -564,6 +565,8 @@ animation = &"idle"
 script = ExtResource("5_diegetic")
 
 [node name="UI" type="CanvasLayer" parent="."]
+
+[node name="QuitButton" parent="UI" instance=ExtResource("200_quit")]
 
 [node name="NonDiegeticPresenter" type="Control" parent="UI" groups=["non_diegetic_presenter"]]
 anchor_right = 1.0
