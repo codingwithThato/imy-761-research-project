@@ -11,7 +11,7 @@
 [ext_resource type="Script" uid="uid://c4f2xfoj1slck" path="res://levels/Level1.gd" id="9_level1"]
 [ext_resource type="Script" uid="uid://c8h2lnapemo0g" path="res://scripts/LevelExit.gd" id="11_exit"]
 [ext_resource type="PackedScene" path="res://levels/Level2.tscn" id="12_level2"]
-[ext_resource type="SystemFont" path="res://assets/fonts/HUDFont.tres" id="13_hudfont"]
+[ext_resource type="FontFile" path="res://assets/font/LowresPixel-Regular.otf" id="13_hudfont"]
 [ext_resource type="SpriteFrames" uid="uid://3p2dorl55bls" path="res://assets/Character/CaitSpriteFrames.tres" id="90_caitframes"]
 [ext_resource type="Texture2D" uid="uid://dj402n4s77en5" path="res://assets/TileMap/Ground.png" id="91_groundtex"]
 [ext_resource type="Texture2D" uid="uid://dn20ewdfkh4o8" path="res://assets/TileMap/Spikes.png" id="92_spikestex"]
@@ -50,7 +50,7 @@ size = Vector2(200, 40)
 [sub_resource type="Resource" id="Gap2FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "pit_late_jump_2"
-cause_message = "Same mistake again. Take off before the edge, not after it."
+cause_message = "Same mistake. Take off earlier."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "stumble"
 
@@ -60,7 +60,7 @@ size = Vector2(150, 300)
 [sub_resource type="Resource" id="SpikesFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "spikes_intro"
-cause_message = "Walked straight into the spikes. Jump over them instead."
+cause_message = "Hit the spikes. Jump over them."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
 
@@ -70,7 +70,7 @@ size = Vector2(45, 28)
 [sub_resource type="Resource" id="EdgeFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "ran_off_start_edge"
-cause_message = "Walked backward off the ledge — keep moving toward the platform, not away from it."
+cause_message = "Walked off the ledge. Move toward the platform."
 demo_points = PackedVector2Array(-50, 0, 50, 0)
 cause_cue = "stumble"
 
@@ -310,10 +310,10 @@ script = ExtResource("6_nondiegetic")
 visible = false
 layout_mode = 0
 anchor_right = 1.0
-offset_top = 40.0
-offset_bottom = 90.0
+offset_top = 8.0
+offset_bottom = 48.0
 theme_override_fonts/font = ExtResource("13_hudfont")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
 
 [node name="ArrowOverlay" type="Control" parent="UI/NonDiegeticPresenter" unique_id=1867560249]

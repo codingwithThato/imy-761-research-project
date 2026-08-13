@@ -12,7 +12,7 @@
 [ext_resource type="Script" path="res://scripts/LevelExit.gd" id="11_exit"]
 [ext_resource type="Script" path="res://scripts/MovingPlatform.gd" id="12_moving"]
 [ext_resource type="PackedScene" path="res://levels/Level5.tscn" id="13_level5"]
-[ext_resource type="SystemFont" path="res://assets/fonts/HUDFont.tres" id="14_hudfont"]
+[ext_resource type="FontFile" path="res://assets/font/LowresPixel-Regular.otf" id="14_hudfont"]
 
 [ext_resource type="SpriteFrames" uid="uid://3p2dorl55bls" path="res://assets/Character/CaitSpriteFrames.tres" id="90_caitframes"]
 [ext_resource type="SpriteFrames" path="res://assets/dog/DogSpriteFrames.tres" id="94_dogframes"]
@@ -67,14 +67,14 @@ cause_cue = "stumble"
 [sub_resource type="Resource" id="PlatformFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "platform_mistimed"
-cause_message = "Jumped too early. Wait until the platform is under you, then ride it across."
+cause_message = "Too early. Wait for the platform, then ride it."
 demo_points = PackedVector2Array(-150, 0, -80, -20, 0, -20, 80, -20, 150, 0)
 cause_cue = "stumble"
 
 [sub_resource type="Resource" id="SpikesFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "spikes_no_jump_4"
-cause_message = "Walked straight into the spikes. Jump over them instead."
+cause_message = "Hit the spikes. Jump over them."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
 
@@ -93,14 +93,14 @@ size = Vector2(250, 300)
 [sub_resource type="Resource" id="Gap2FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "gap_control_jump_4"
-cause_message = "One more gap after the platform. Aim for a smooth jump."
+cause_message = "Another gap. Aim for a smooth jump."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "overshoot"
 
 [sub_resource type="Resource" id="Platform2FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "platform_mistimed_2"
-cause_message = "A second, wider platform crossing. Same rule: wait, then ride it across."
+cause_message = "Wider platform. Wait, then ride it across."
 demo_points = PackedVector2Array(-125, 0, -60, -20, 0, -20, 60, -20, 125, 0)
 cause_cue = "stumble"
 
@@ -110,7 +110,7 @@ size = Vector2(150, 300)
 [sub_resource type="Resource" id="EdgeFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "ran_off_start_edge"
-cause_message = "Walked backward off the ledge — keep moving toward the platform, not away from it."
+cause_message = "Walked off the ledge. Move toward the platform."
 demo_points = PackedVector2Array(-50, 0, 50, 0)
 cause_cue = "stumble"
 
@@ -446,10 +446,10 @@ script = ExtResource("6_nondiegetic")
 [node name="HUDLabel" type="Label" parent="UI/NonDiegeticPresenter"]
 visible = false
 anchor_right = 1.0
-offset_top = 40.0
-offset_bottom = 90.0
+offset_top = 8.0
+offset_bottom = 48.0
 theme_override_fonts/font = ExtResource("14_hudfont")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
 text = ""
 

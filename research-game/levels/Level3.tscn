@@ -11,7 +11,7 @@
 [ext_resource type="Script" path="res://levels/Level3.gd" id="9_level3"]
 [ext_resource type="Script" path="res://scripts/LevelExit.gd" id="11_exit"]
 [ext_resource type="PackedScene" path="res://levels/Level4.tscn" id="12_level4"]
-[ext_resource type="SystemFont" path="res://assets/fonts/HUDFont.tres" id="13_hudfont"]
+[ext_resource type="FontFile" path="res://assets/font/LowresPixel-Regular.otf" id="13_hudfont"]
 
 [ext_resource type="SpriteFrames" uid="uid://3p2dorl55bls" path="res://assets/Character/CaitSpriteFrames.tres" id="90_caitframes"]
 [ext_resource type="SpriteFrames" path="res://assets/dog/DogSpriteFrames.tres" id="94_dogframes"]
@@ -57,35 +57,35 @@ size = Vector2(160, 300)
 [sub_resource type="Resource" id="TightGap1FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "tight_gap_1"
-cause_message = "Late again. This gap is tighter. Jump the instant you leave the ledge."
+cause_message = "Tighter gap. Jump right off the ledge."
 demo_points = PackedVector2Array(-65, 0, -20, -60, 15, -85, 55, -55, 80, 0)
 cause_cue = "stumble"
 
 [sub_resource type="Resource" id="Spikes1FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "spikes_tight_1"
-cause_message = "Hit the spikes. This patch is narrower. A quick hop clears it."
+cause_message = "Narrow spikes. A quick hop clears them."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
 
 [sub_resource type="Resource" id="TightGap2FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "tight_gap_2"
-cause_message = "Out of control again. Keep the jump smooth and aimed."
+cause_message = "Jump was wild. Keep it smooth and aimed."
 demo_points = PackedVector2Array(-70, 0, -25, -65, 15, -95, 55, -60, 85, 0)
 cause_cue = "overshoot"
 
 [sub_resource type="Resource" id="Spikes2FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "spikes_tight_2"
-cause_message = "Another spike patch, right at the edge. Jump early."
+cause_message = "Spikes at the edge. Jump early."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
 
 [sub_resource type="Resource" id="Gap3FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "tight_gap_3"
-cause_message = "Final stretch. This is the widest gap yet. Commit to a full jump."
+cause_message = "Widest gap yet. Commit to a full jump."
 demo_points = PackedVector2Array(-80, 0, -30, -70, 20, -100, 65, -65, 100, 0)
 cause_cue = "overshoot"
 
@@ -98,14 +98,14 @@ size = Vector2(200, 40)
 [sub_resource type="Resource" id="TightGap3FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "tight_gap_4"
-cause_message = "Not the final stretch. One more tight gap. Same fix as before."
+cause_message = "One more tight gap. Jump right off the ledge."
 demo_points = PackedVector2Array(-65, 0, -20, -60, 15, -85, 55, -55, 80, 0)
 cause_cue = "stumble"
 
 [sub_resource type="Resource" id="Spikes3FailureData"]
 script = ExtResource("8_faildata")
 cause_id = "spikes_tight_3"
-cause_message = "Last spike patch. Jump early. This margin is tight."
+cause_message = "Tight spikes. Jump early."
 demo_points = PackedVector2Array(-30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "recoil"
 
@@ -115,7 +115,7 @@ size = Vector2(150, 300)
 [sub_resource type="Resource" id="EdgeFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "ran_off_start_edge"
-cause_message = "Walked backward off the ledge — keep moving toward the platform, not away from it."
+cause_message = "Walked off the ledge. Move toward the platform."
 demo_points = PackedVector2Array(-50, 0, 50, 0)
 cause_cue = "stumble"
 
@@ -446,10 +446,10 @@ script = ExtResource("6_nondiegetic")
 [node name="HUDLabel" type="Label" parent="UI/NonDiegeticPresenter"]
 visible = false
 anchor_right = 1.0
-offset_top = 40.0
-offset_bottom = 90.0
+offset_top = 8.0
+offset_bottom = 48.0
 theme_override_fonts/font = ExtResource("13_hudfont")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
 text = ""
 
