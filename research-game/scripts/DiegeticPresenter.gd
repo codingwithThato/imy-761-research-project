@@ -16,7 +16,7 @@ extends FailurePresenter
 @export var cue_sound: AudioStreamPlayer2D
 
 
-func present(data: FailureData, origin: Vector2) -> void:
+func present(data: FailureData, origin: Vector2, context: Dictionary = {}) -> void:
 	# 1. Cause - the player character reacts in-world.
 	var player := get_tree().get_first_node_in_group("player")
 	if player != null and data.cause_cue != "none" and player.has_method("play_cause_cue"):
@@ -25,7 +25,12 @@ func present(data: FailureData, origin: Vector2) -> void:
 	# 2. Correction - the companion demonstrates the correct route.
 	var companion := get_tree().get_first_node_in_group("companion")
 	if companion != null and companion.has_method("demonstrate"):
-		companion.demonstrate(data.world_points(origin), Config.DEMO_DURATION)
+		companion.demonstrate(
+			data.effective_world_points(origin, context),
+			Config.DEMO_DURATION,
+			data.emphasize_hesitation,
+			data.pause_at_index(origin, context)
+		)
 
 	if cue_sound != null:
 		cue_sound.global_position = origin

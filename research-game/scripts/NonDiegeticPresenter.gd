@@ -21,13 +21,13 @@ extends FailurePresenter
 @export var ui_sound: AudioStreamPlayer
 
 
-func present(data: FailureData, origin: Vector2) -> void:
+func present(data: FailureData, origin: Vector2, context: Dictionary = {}) -> void:
 	if hud_label != null:
 		hud_label.text = data.cause_message
 		hud_label.visible = true
 
 	if arrow != null and arrow.has_method("show_path"):
-		arrow.show_path(data.world_points(origin))
+		arrow.show_path(data.effective_world_points(origin, context))
 
 	# The companion stays neutral - it does NOT demonstrate in this condition.
 	var companion := get_tree().get_first_node_in_group("companion")

@@ -17,6 +17,11 @@ extends Control
 var _world_points: PackedVector2Array = PackedVector2Array()
 var _showing := false
 
+## Height (px) a leg needs to rise before it counts as part of a jump arc
+## rather than a flat run-up. Matches Companion.gd's JUMP_ARC_HEIGHT so both
+## presenters agree on which part of a shared route is "the jump".
+const JUMP_ARC_HEIGHT := 20.0
+
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -47,9 +52,13 @@ func _draw() -> void:
 	if not _showing or _world_points.size() < 2:
 		return
 
+	var trimmed := _trim_leading_run(_world_points)
+	if trimmed.size() < 2:
+		return
+
 	var xf := get_viewport().get_canvas_transform()
 	var pts := PackedVector2Array()
-	for p in _world_points:
+	for p in trimmed:
 		pts.append(xf * p)
 
 	var smooth_pts := _round_corners(pts)
@@ -74,6 +83,20 @@ func _draw() -> void:
 	draw_circle(tip, head_size * 0.12, line_colour)
 	draw_circle(tip + left, head_size * 0.2, line_colour)
 	draw_circle(tip + right, head_size * 0.2, line_colour)
+
+
+## Drops any flat run-up before the first jump leg. The arrow is a
+## correction cue for the jump itself; a run-up exists only so the diegetic
+## companion has room to run (and, for JUMPED_TOO_EARLY, pause at the
+## abandoned point) - neither is meaningful as a static screen arrow, and
+## the "cause" side of that distinction is already carried by the HUD text.
+## A route with no jump leg at all (e.g. a direction hazard) is returned
+## unchanged - there is no arc to isolate, so the whole route is the cue.
+func _trim_leading_run(points: PackedVector2Array) -> PackedVector2Array:
+	for i in range(1, points.size()):
+		if absf(points[i].y - points[i - 1].y) > JUMP_ARC_HEIGHT:
+			return points.slice(i - 1, points.size())
+	return points
 
 
 ## Replaces each interior corner with a short quadratic-bezier arc so a

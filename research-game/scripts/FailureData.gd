@@ -39,11 +39,75 @@ extends Resource
 ## itself needs to be visible. Identical in both conditions.
 @export var hides_player: bool = true
 
+## Which specific mistake this variant addresses. A hazard can hold several
+## FailureData variants, one per mistake; Hazard.gd classifies the player's
+## actual pre-failure action and picks the matching one, so the message and
+## the demo route are both about what actually happened.
+enum Mistake { NO_JUMP, JUMPED_TOO_EARLY, JUMPED_TOO_LATE, WRONG_DIRECTION, GENERIC }
+
+## GENERIC is the catch-all: timing/direction was fine but the attempt still
+## failed some other way, and the fallback for hazards that only have one
+## authored variant so far.
+@export var mistake: Mistake = Mistake.GENERIC
+
+## DIEGETIC only: when true, the companion's pre-jump pause (see
+## Companion.demonstrate()) is replaced with a longer face-player/bark/
+## crouch beat instead of the default brief idle hold. For NO_JUMP variants,
+## where the point is "there is a jump required here", not just timing.
+@export var emphasize_hesitation: bool = false
+
 
 ## Converts the authored offsets into world-space points.
 func world_points(origin: Vector2) -> PackedVector2Array:
+	return _to_world(demo_points, origin)
+
+
+## Like world_points(), but for a JUMPED_TOO_EARLY variant with a live
+## jump_x in context, inserts a waypoint at the player's actual (clamped)
+## takeoff x between the route's first two authored points - so the
+## companion visibly runs PAST where the player actually jumped before
+## leaping from the correct spot, instead of a fixed illustrative point.
+##
+## Both presenters call this (not world_points() directly) so the diegetic
+## route and the non-diegetic arrow stay identical per attempt - the
+## orthogonality constraint holds for the dynamic case the same way it does
+## for the static one.
+func effective_world_points(origin: Vector2, context: Dictionary) -> PackedVector2Array:
+	return _to_world(_effective_offset_points(origin, context), origin)
+
+
+## Index into effective_world_points()'s result where the companion should
+## pause - having just run past the abandoned point - before continuing on
+## to the real takeoff. -1 if this attempt has no such point (e.g. context
+## was missing jump_x, or this variant isn't JUMPED_TOO_EARLY). Derived from
+## whether a waypoint was actually inserted, not just from `mistake`, so it
+## always agrees with effective_world_points().
+func pause_at_index(origin: Vector2, context: Dictionary) -> int:
+	if mistake == Mistake.JUMPED_TOO_EARLY \
+			and _effective_offset_points(origin, context).size() > demo_points.size():
+		return 1
+	return -1
+
+
+func _effective_offset_points(origin: Vector2, context: Dictionary) -> PackedVector2Array:
+	if mistake != Mistake.JUMPED_TOO_EARLY or not context.has("jump_x") or demo_points.size() < 2:
+		return demo_points
+
+	var start: Vector2 = demo_points[0]
+	var next: Vector2 = demo_points[1]
+	var lo: float = minf(start.x, next.x)
+	var hi: float = maxf(start.x, next.x)
+	var waypoint := Vector2(clampf(context.jump_x - origin.x, lo, hi), start.y)
+
+	var points := PackedVector2Array([start, waypoint])
+	for i in range(1, demo_points.size()):
+		points.append(demo_points[i])
+	return points
+
+
+func _to_world(points: PackedVector2Array, origin: Vector2) -> PackedVector2Array:
 	var out := PackedVector2Array()
-	for p in demo_points:
+	for p in points:
 		out.append(origin + p)
 	return out
 

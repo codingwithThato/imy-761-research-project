@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" path="res://assets/dog/Pixel-art_sprite_sheet_o-run/run/rotations/east.png" id="2_run"]
 [ext_resource type="Texture2D" path="res://assets/dog/Pixel-art_sprite_sheet_o-jump/jump/rotations/east.png" id="3_jump"]
 [ext_resource type="Texture2D" path="res://assets/dog/Pixel-art_sprite_sheet_o-sitting_down/sitting_down/rotations/east.png" id="4_sit"]
+[ext_resource type="Texture2D" uid="uid://b6mmn88ojyt5x" path="res://assets/dog/Pixel-art_sprite_sheet_o-bark/bark/rotations/east.png" id="5_bark"]
 
 [resource]
 animations = [{
@@ -37,5 +38,13 @@ animations = [{
 }],
 "loop": true,
 "name": &"sit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_bark")
+}],
+"loop": true,
+"name": &"bark",
 "speed": 5.0
 }]

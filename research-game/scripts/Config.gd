@@ -18,7 +18,7 @@ var condition: Condition = Condition.DIEGETIC
 ## Delay between the death and the feedback appearing.
 const FEEDBACK_ONSET := 0.18
 ## How long the feedback stays on screen / in world.
-const FEEDBACK_DURATION := 2.0
+const FEEDBACK_DURATION := 3.0
 ## How long the demonstration itself takes to play out.
 ## Must be <= FEEDBACK_DURATION.
 const DEMO_DURATION := 1.2

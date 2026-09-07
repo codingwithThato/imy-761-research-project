@@ -62,17 +62,33 @@ in `_ready()` so there's a respawn point before the first checkpoint.
 ## 5. Authoring a hazard
 
 1. Area2D + CollisionShape2D, attach `Hazard.gd`.
-2. In the inspector, `failure_data` → New FailureData.
-3. Fill in:
+2. In the inspector, `failure_variants` → add one or more FailureData entries.
+   A hazard with just one entry works exactly like before — the mistake tag
+   is only used to pick between several.
+3. On each FailureData, fill in:
    - `cause_id` — e.g. `pit_late_jump`
+   - `mistake` — which mistake this variant addresses (`NO_JUMP`,
+     `JUMPED_TOO_EARLY`, `JUMPED_TOO_LATE`, `WRONG_DIRECTION`, `GENERIC`)
    - `cause_message` — what went wrong AND what to do, as short sentences
      with no em dashes, e.g. *"Jumped too late. Take off earlier."*
    - `cause_cue` — `stumble` / `recoil` / `overshoot`
    - `demo_points` — the correct route, as offsets from this hazard's position
+4. On the hazard itself, set `hazard_kind`:
+   - `jump_obstacle` (default) — classification compares where the player
+     took off against `expected_takeoff_range` (world-x offsets from this
+     hazard) to tell early/late/no-jump apart.
+   - `direction` — for hazards failed by moving the wrong way (e.g. the
+     start-edge hazards), compared against `expected_direction`.
 
 `demo_points` is the important one: the companion walks it in the diegetic
 condition and the overlay arrow traces the same points in the non-diegetic
-condition. One data source, two channels.
+condition. One data source, two channels — per mistake, once a hazard has
+more than one variant.
+
+`Hazard.gd` classifies the player's actual pre-failure action (from
+`Player.get_failure_context()`) into a mistake and picks the matching
+variant, falling back to `GENERIC` or the first entry if nothing matches —
+see the `Mistake` enum in `FailureData.gd` and `Hazard._classify()`.
 
 ## 6. Why it's built this way
 

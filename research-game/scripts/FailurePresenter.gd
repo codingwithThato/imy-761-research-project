@@ -5,8 +5,9 @@ extends Node
 ## introduce their own timing, or the conditions stop being equivalent.
 
 ## Show the failure feedback. Called exactly Config.FEEDBACK_ONSET seconds
-## after the death, in both conditions.
-func present(_data: FailureData, _origin: Vector2) -> void:
+## after the death, in both conditions. `context` is the player's
+## pre-failure action data (see Player.get_failure_context()).
+func present(_data: FailureData, _origin: Vector2, _context: Dictionary = {}) -> void:
 	push_error("FailurePresenter.present() not overridden.")
 
 

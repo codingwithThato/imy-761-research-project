@@ -61,7 +61,10 @@ func _active_presenter() -> Node:
 
 
 ## The failure sequence. Identical in both conditions except line marked BRANCH.
-func trigger_failure(data: FailureData, origin: Vector2) -> void:
+## `context` is the player's pre-failure action data (see
+## Player.get_failure_context()) - passed through to the presenter so a
+## JUMPED_TOO_EARLY demonstration can reflect the player's actual jump_x.
+func trigger_failure(data: FailureData, origin: Vector2, context: Dictionary = {}) -> void:
 	if _busy:
 		return
 	_busy = true
@@ -104,7 +107,7 @@ func trigger_failure(data: FailureData, origin: Vector2) -> void:
 	# 3. BRANCH - the only condition-dependent line in the whole pipeline.
 	var presenter := _active_presenter()
 	if presenter != null and presenter.has_method("present"):
-		presenter.present(data, origin)
+		presenter.present(data, origin, context)
 	else:
 		push_warning("FailureController: no presenter found for condition %s."
 			% Config.condition_name())

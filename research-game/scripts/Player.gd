@@ -19,6 +19,12 @@ var _locked := false
 var _coyote := 0.0
 var _buffer := 0.0
 
+## Action tracking for failure classification (see get_failure_context()).
+var _last_jump_time := -INF
+var _last_jump_x := 0.0
+var _jumped_since_grounded := false
+var _last_move_dir := 0.0
+
 
 func _ready() -> void:
 	add_to_group("player")
@@ -35,6 +41,7 @@ func _physics_process(delta: float) -> void:
 		_coyote -= delta
 	else:
 		_coyote = coyote_time
+		_jumped_since_grounded = false
 
 	if Input.is_action_just_pressed("ui_accept"):
 		_buffer = jump_buffer
@@ -46,9 +53,14 @@ func _physics_process(delta: float) -> void:
 		_buffer = 0.0
 		_coyote = 0.0
 		_play("jump")
+		_last_jump_time = Time.get_ticks_msec() / 1000.0
+		_last_jump_x = global_position.x
+		_jumped_since_grounded = true
 
 	var dir := Input.get_axis("ui_left", "ui_right")
 	velocity.x = dir * speed
+	if dir != 0.0:
+		_last_move_dir = dir
 	if sprite != null and dir != 0.0:
 		sprite.scale.x = absf(sprite.scale.x) * signf(dir)
 
@@ -91,6 +103,17 @@ func play_cause_cue(cue: String) -> void:
 			_play("overshoot")
 		_:
 			pass
+
+
+## Called by Hazard.gd at the moment of contact, to classify what the player
+## actually did before this failure (see FailureData.Mistake).
+func get_failure_context() -> Dictionary:
+	return {
+		"jumped": _jumped_since_grounded,
+		"jump_x": _last_jump_x,
+		"jump_time": _last_jump_time,
+		"move_dir": _last_move_dir,
+	}
 
 
 func _play(anim: String) -> void:
