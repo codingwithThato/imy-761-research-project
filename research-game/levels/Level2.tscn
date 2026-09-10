@@ -72,6 +72,7 @@ cause_message = "You didn't jump. Jump to clear the gap."
 demo_points = PackedVector2Array(-80, 0, -30, -65, 20, -95, 60, -60, 90, 0)
 cause_cue = "stumble"
 mistake = 0
+emphasize_hesitation = true
 
 [sub_resource type="Resource" id="Gap1JumpedEarlyFailureData"]
 script = ExtResource("8_faildata")
@@ -97,6 +98,7 @@ cause_message = "You didn't jump. Jump over the spikes."
 demo_points = PackedVector2Array(-90, 0, -40, 0, -10, -70, 20, -70, 50, 0)
 cause_cue = "stumble"
 hides_player = false
+emphasize_hesitation = true
 mistake = 0
 
 [sub_resource type="Resource" id="SpikesAJumpedEarlyFailureData"]
@@ -132,6 +134,7 @@ cause_message = "You didn't jump. Jump to clear the gap."
 demo_points = PackedVector2Array(-90, 0, -35, -70, 20, -100, 65, -65, 100, 0)
 cause_cue = "stumble"
 mistake = 0
+emphasize_hesitation = true
 
 [sub_resource type="Resource" id="Gap2JumpedEarlyFailureData"]
 script = ExtResource("8_faildata")
@@ -178,6 +181,7 @@ cause_message = "You didn't jump. Jump to clear the gap."
 demo_points = PackedVector2Array(-80, 0, -30, -65, 20, -95, 60, -60, 90, 0)
 cause_cue = "stumble"
 mistake = 0
+emphasize_hesitation = true
 
 [sub_resource type="Resource" id="Gap3JumpedEarlyFailureData"]
 script = ExtResource("8_faildata")
@@ -203,6 +207,7 @@ cause_message = "You didn't jump. Jump over the spikes."
 demo_points = PackedVector2Array(-90, 0, -40, 0, -10, -70, 20, -70, 50, 0)
 cause_cue = "stumble"
 hides_player = false
+emphasize_hesitation = true
 mistake = 0
 
 [sub_resource type="Resource" id="SpikesBJumpedEarlyFailureData"]

@@ -69,6 +69,7 @@ cause_message = "You didn't jump. Jump to clear the gap."
 demo_points = PackedVector2Array(-65, 0, -20, -60, 15, -85, 55, -55, 80, 0)
 cause_cue = "stumble"
 mistake = 0
+emphasize_hesitation = true
 
 [sub_resource type="Resource" id="TightGap1JumpedEarlyFailureData"]
 script = ExtResource("8_faildata")
@@ -102,6 +103,7 @@ cause_message = "You didn't jump. Jump over the spikes."
 demo_points = PackedVector2Array(-80, 0, -30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "stumble"
 hides_player = false
+emphasize_hesitation = true
 mistake = 0
 
 [sub_resource type="Resource" id="Spikes1JumpedEarlyFailureData"]
@@ -137,6 +139,7 @@ cause_message = "You didn't jump. Jump to clear the gap."
 demo_points = PackedVector2Array(-70, 0, -25, -65, 15, -95, 55, -60, 85, 0)
 cause_cue = "stumble"
 mistake = 0
+emphasize_hesitation = true
 
 [sub_resource type="Resource" id="TightGap2JumpedEarlyFailureData"]
 script = ExtResource("8_faildata")
@@ -170,6 +173,7 @@ cause_message = "You didn't jump. Jump over the spikes."
 demo_points = PackedVector2Array(-80, 0, -30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "stumble"
 hides_player = false
+emphasize_hesitation = true
 mistake = 0
 
 [sub_resource type="Resource" id="Spikes2JumpedEarlyFailureData"]
@@ -205,6 +209,7 @@ cause_message = "You didn't jump. Jump to clear the gap."
 demo_points = PackedVector2Array(-80, 0, -30, -70, 20, -100, 65, -65, 100, 0)
 cause_cue = "stumble"
 mistake = 0
+emphasize_hesitation = true
 
 [sub_resource type="Resource" id="Gap3JumpedEarlyFailureData"]
 script = ExtResource("8_faildata")
@@ -243,6 +248,7 @@ cause_message = "You didn't jump. Jump to clear the gap."
 demo_points = PackedVector2Array(-65, 0, -20, -60, 15, -85, 55, -55, 80, 0)
 cause_cue = "stumble"
 mistake = 0
+emphasize_hesitation = true
 
 [sub_resource type="Resource" id="TightGap3JumpedEarlyFailureData"]
 script = ExtResource("8_faildata")
@@ -276,6 +282,7 @@ cause_message = "You didn't jump. Jump over the spikes."
 demo_points = PackedVector2Array(-80, 0, -30, 0, -8, -65, 15, -65, 38, 0)
 cause_cue = "stumble"
 hides_player = false
+emphasize_hesitation = true
 mistake = 0
 
 [sub_resource type="Resource" id="Spikes3JumpedEarlyFailureData"]
