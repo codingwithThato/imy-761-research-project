@@ -36,6 +36,14 @@ script = ExtResource("8_faildata")
 cause_id = "pit_late_jump"
 cause_message = "Jumped too late. Take off earlier."
 demo_points = PackedVector2Array(-150, 0, -75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "overshoot"
+mistake = 2
+
+[sub_resource type="Resource" id="PitGenericFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "pit_generic"
+cause_message = "Missed the gap even with good timing. Jump with more distance."
+demo_points = PackedVector2Array(-150, 0, -75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "stumble"
 mistake = 4
 
@@ -70,7 +78,32 @@ script = ExtResource("8_faildata")
 cause_id = "pit_late_jump_2"
 cause_message = "Jumped too late. Take off earlier."
 demo_points = PackedVector2Array(-150, 0, -75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "overshoot"
+mistake = 2
+
+[sub_resource type="Resource" id="Gap2GenericFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_2_generic"
+cause_message = "Missed the gap even with good timing. Jump with more distance."
+demo_points = PackedVector2Array(-150, 0, -75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "stumble"
+mistake = 4
+
+[sub_resource type="Resource" id="Gap2NoJumpFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_2_no_jump"
+cause_message = "You didn't jump. Jump to clear the gap."
+demo_points = PackedVector2Array(-150, 0, -75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "stumble"
+mistake = 0
+
+[sub_resource type="Resource" id="Gap2JumpedEarlyFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_2_jumped_early"
+cause_message = "Jumped too early. Take off later."
+demo_points = PackedVector2Array(-150, 0, -75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "recoil"
+mistake = 1
 
 [sub_resource type="RectangleShape2D" id="Gap2Shape"]
 size = Vector2(150, 300)
@@ -120,6 +153,15 @@ cause_id = "ran_off_start_edge"
 cause_message = "Walked off the ledge. Move toward the platform."
 demo_points = PackedVector2Array(-50, 0, 50, 0)
 cause_cue = "stumble"
+mistake = 3
+
+[sub_resource type="Resource" id="EdgeGenericFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "edge_generic"
+cause_message = "Fell off the ledge. Move toward the platform to stay safe."
+demo_points = PackedVector2Array(-50, 0, 50, 0)
+cause_cue = "stumble"
+mistake = 4
 
 [sub_resource type="RectangleShape2D" id="EdgeShape"]
 size = Vector2(150, 300)
@@ -233,7 +275,7 @@ shape = SubResource("CheckpointShape")
 [node name="PitTrigger" type="Area2D" parent="." unique_id=1769020841]
 position = Vector2(475, 400)
 script = ExtResource("2_hazard")
-failure_variants = Array[FailureData]([SubResource("PitFailureData"), SubResource("PitNoJumpFailureData"), SubResource("PitJumpedEarlyFailureData")])
+failure_variants = Array[FailureData]([SubResource("PitFailureData"), SubResource("PitNoJumpFailureData"), SubResource("PitJumpedEarlyFailureData"), SubResource("PitGenericFailureData")])
 expected_takeoff_range = Vector2(-110, -20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PitTrigger" unique_id=122448348]
@@ -276,7 +318,8 @@ shape = SubResource("CheckpointShape")
 [node name="Gap2Trigger" type="Area2D" parent="." unique_id=1239913945]
 position = Vector2(1075, 400)
 script = ExtResource("2_hazard")
-failure_variants = Array[FailureData]([SubResource("Gap2FailureData")])
+failure_variants = Array[FailureData]([SubResource("Gap2FailureData"), SubResource("Gap2NoJumpFailureData"), SubResource("Gap2JumpedEarlyFailureData"), SubResource("Gap2GenericFailureData")])
+expected_takeoff_range = Vector2(-110, -20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Gap2Trigger" unique_id=844118514]
 position = Vector2(1, 229)
@@ -308,7 +351,7 @@ shape = SubResource("CheckpointShape")
 [node name="EdgeTrigger" type="Area2D" parent="." unique_id=1101331798]
 position = Vector2(-75, 400)
 script = ExtResource("2_hazard")
-failure_variants = Array[FailureData]([SubResource("EdgeFailureData")])
+failure_variants = Array[FailureData]([SubResource("EdgeFailureData"), SubResource("EdgeGenericFailureData")])
 hazard_kind = "direction"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EdgeTrigger" unique_id=1806336591]

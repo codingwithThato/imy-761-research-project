@@ -1,245 +1,160 @@
-# Session handoff — mistake-classification feedback, dog demonstration, wording pass
+# Session handoff — moving-platform demo fix, mistake-specific HUD text for gaps/platforms/edges
 
-Written 2026-09-07, end of a long session. Paste this whole file to Claude at the
-start of the next session ("read SESSION-HANDOFF.md and continue from there") to
-pick up with full context. Branch `Thato`. **Nothing has been committed this
-session** — everything below is still sitting in the working tree, uncommitted.
+Written 2026-09-10, end of a session with Chenoa on branch `Chenoa`. Paste this
+whole file to Claude at the start of the next session ("read SESSION-HANDOFF.md
+and continue from there") to pick up with full context.
+
+**No Godot binary was available to Claude this session** (Windows machine) — all
+changes below were made by editing `.tscn`/`.gd` files directly and verified by
+static inspection (grepping counts, re-reading the edited resource blocks), NOT
+by running the game. Everything needs a pass in the editor before you trust it.
 
 ## Where this picked up
 
-This continues the failure-feedback mistake-classification work from the previous
-session (see git log / the old handoff content below this file's history if you
-need the very original lecturer-feedback framing — short version: hazards used to
-fire one static pre-authored message regardless of what the player actually did;
-`FailureData.Mistake` enum + `Hazard.gd` classification fixed that architecturally
-last session, but only `PitTrigger` on Level1 had real per-mistake content).
+Continues from the `d299f4c` commit ("Per-mistake dog demonstrations, arrow
+trim, and spikes/gap mistake content") and the old `SESSION-HANDOFF.md` that
+described it — that content is now stale/resolved and has been replaced by this
+file. Two lecturer-feedback items were worked this session:
 
-## What got built this session, roughly in order
+## 1. Moving-platform demonstration (DONE, committed as `1f492a0`)
 
-### 1. `PitTrigger` (Level1) — finished the NO_JUMP test case from last session
-Added `pit_no_jump` variant (`NO_JUMP`), verified in headless Godot. This was
-already basically planned; just executed it.
+Original complaint: the companion dog glided across the screen instead of
+landing on/riding/jumping off the actual moving platform, and the arrow didn't
+show where to stand or when to jump. Root cause: `demo_points` for platform
+hazards were a static pre-authored path, but `MovingPlatform.gd`'s tween never
+pauses during a failure sequence, so the platform is rarely where the authored
+route assumes it'll be.
 
-### 2. Diegetic dog demonstration overhaul (`Companion.gd`)
-Big design conversation about how the dog should show *what a player did wrong*,
-not just the one correct route. Landed on:
-- `Companion.demonstrate()` now splits a route into contiguous "run" (flat) vs
-  "jump" (vertical-arc) leg groups and plays the matching pose per group,
-  instead of one static pose glided across the whole path. `_group_legs_by_kind()`.
-- A brief pause (`PRE_JUMP_PAUSE`, idle pose) at every ordinary run→jump
-  transition — reads as her planting her feet before leaping.
-- **NO_JUMP** gets an *emphasized* hesitation instead: run → face the player →
-  **bark** → crouch (`sit` pose) → face forward → jump. User added a new bark
-  sprite sheet (`assets/dog/Pixel-art_sprite_sheet_o-bark/`) mid-session — it's
-  now imported into Godot (`.import` files generated via a headless editor pass)
-  and registered as the `"bark"` animation in `DogSpriteFrames.tres`. Controlled
-  by `FailureData.emphasize_hesitation: bool`, threaded through
-  `DiegeticPresenter.gd`. Hold durations: `BARK_HOLD = 0.7`, `CROUCH_HOLD = 0.6`
-  (lengthened once from 0.3/0.3 — user said the first pass was too quick to
-  catch). `Config.FEEDBACK_DURATION` bumped **2.0 → 3.0s** to give this room
-  (it's a shared equivalence constant, so this affects both conditions' window,
-  not just diegetic).
-- **JUMPED_TOO_EARLY** gets a *dynamic* demonstration: the dog runs past
-  wherever the player *actually* jumped (not a fixed illustrative point) before
-  continuing to the real takeoff spot. Required threading the player's real
-  `jump_x` through the whole pipeline: `Hazard._on_body_entered` now keeps the
-  classification `context` dict instead of discarding it →
-  `FailureController.trigger_failure(data, origin, context)` → both presenters'
-  `present(data, origin, context)` → `FailureData.effective_world_points(origin,
-  context)` (inserts a clamped waypoint at the player's real takeoff x, only for
-  `JUMPED_TOO_EARLY`, only when `context` actually has `jump_x`). Both
-  presenters read this same computed array, so diegetic route and non-diegetic
-  arrow stay identical per attempt — equivalence preserved by construction, just
-  extended to the dynamic case.
-- Then made the pause **at that abandoned point** explicit too (it was just
-  gliding through at first) — `FailureData.pause_at_index()` reports where the
-  waypoint landed, `Companion._split_group_at_index()` splits the run group
-  there, holds briefly (`ABANDONED_PAUSE = 0.45s`, idle pose) before continuing.
-- **JUMPED_TOO_LATE** deliberately reuses the canonical/GENERIC route — no
-  special content needed, it's just "the correct route, which already takes off
-  with room to spare."
+Fixed across several iterations in `Companion.gd`
+(`_demonstrate_platform_ride()` / `_arc_land_on_platform()` / `_arc_glide_to()`),
+`ArrowOverlay.gd` (`_draw_platform_path()`), and `Hazard.platform_path` wiring
+in Level4/5. Summary of the fix: derive a single "ride anchor" offset from
+`demo_points` (x=0, since platform sprite/collision are centred on their own
+origin) and reapply that offset to the platform's **live** position every
+frame — both for boarding (an arc that converges to the live position by
+construction, not a stale snapshot) and for the "found her footing" pause
+immediately after landing (folded into the same continuous tracking loop, no
+gap where her position stops updating).
 
-### 3. Non-diegetic arrow: stopped it from drawing the flat run-up
-The dog's flat run-up leg (added so she has room to run before jumping) was
-leaking into the `ArrowOverlay` too, since both presenters read the same
-`demo_points`. Diagnosed as an unintended side effect, not a deliberate choice.
-Fixed by having `ArrowOverlay._trim_leading_run()` drop any flat run-up before
-the first jump leg — same leg-kind-classification idea as `Companion.gd`, just
-applied as a rendering choice rather than a data change, so both presenters
-still read the literal same array. Direction-only hazards (no jump leg at all,
-e.g. `EdgeTrigger`) are left untouched, since there's no arc to isolate there.
+This is **already committed** — nothing to do here unless the user reports a
+new visual issue with it in the editor.
 
-### 4. Non-diegetic companion floating during a pitfall death — ATTEMPTED AND REVERTED
-User reported the dog floats/hovers over the pit in non-diegetic mode when the
-player falls in. Root cause diagnosed correctly: `PitShape`'s collision zone
-starts well below the ledge, so the player free-falls for ~0.4s+ before the
-hazard even fires, and `Companion._process()` had zero ground awareness — it
-was blindly chasing `player.position + offset` every frame regardless of
-terrain, well before any failure was ever detected.
+## 2. Non-diegetic HUD text wasn't mistake-specific for gaps/platforms/edges (DONE, uncommitted)
 
-Two fix attempts were built and verified against real simulated physics
-(walked/jumped a real Player node through real frames headlessly):
-1. `Companion.freeze()` called from `FailureController` at the start of
-   `trigger_failure()` — insufficient alone, the float started *before*
-   detection.
-2. `Companion._process()` gated on `player.is_on_floor()` — fixed the float
-   correctly (verified: companion never left y=400, ended parked exactly at the
-   ledge edge x=400) but **overcorrected**: it froze the dog during *every*
-   jump, not just failures, killing the "she jumps along with you" illusion
-   during ordinary successful play. Refined once more to a ground-height/
-   tolerance-based version (`_ground_y` + `FALL_TOLERANCE`) that correctly
-   distinguished "same-height jump, never dips below launch height" from
-   "genuinely sinking below where she took off" — verified this version too
-   (ordinary jump: companion y swung 330→393, tracked the whole arc; pitfall:
-   still capped at ~400, still parked at the edge).
+User's complaint: hitting a gap or platform hazard always showed the same
+fixed line regardless of what you actually did (didn't jump / jumped early /
+jumped late) — e.g. "Tighter gap. Jump right off the ledge." every time. Only
+**spikes** hazards had gotten the full `NO_JUMP`/`JUMPED_TOO_EARLY`/
+`JUMPED_TOO_LATE`/`GENERIC` `FailureData` variant treatment in `d299f4c`; every
+gap, moving-platform, and start-edge ("direction") hazard across all 5 levels
+still had exactly one `FailureData`, so `Hazard._select_variant()` always fell
+back to it no matter what `_classify()` computed.
 
-**Then the user asked to revert everything from that point onward** — both
-attempts, the `freeze()` method, the ground-tracking `_process()` rewrite, and
-`FailureController`'s call into it. This was done. `Companion.gd`'s
-`_process()` is back to the original plain lerp-follow with **no ground
-awareness at all**. Confirmed no leftover references to `freeze`/`_ground_y`/
-`FALL_TOLERANCE` anywhere in scripts.
+Fixed by extending the same pattern to every remaining hazard (~20 gap/platform
+hazards + 5 edge hazards across Level1–5):
+- Where the hazard's one existing message already described a specific mistake
+  almost verbatim (e.g. "Jumped too late. Take off earlier." on a hazard tagged
+  `GENERIC` by default), retagged it to the real mistake (`JUMPED_TOO_LATE = 2`,
+  or `JUMPED_TOO_EARLY = 1` for `platform_mistimed`, or `WRONG_DIRECTION = 3`
+  for the edge hazards) and added a *new* `GENERIC` fallback with different
+  flavor text.
+- Where the existing message was flavor/instructional text not tied to one
+  specific mistake (e.g. "Widest gap yet. Commit to a full jump.", "Let go
+  mid-jump…"), kept it as `GENERIC` and added the three/one missing specific
+  variants.
+- Added a tuned `expected_takeoff_range` directly on each Hazard node — most of
+  these had been silently using `Hazard.gd`'s default `(-40, -10)`, which
+  doesn't fit most gap/platform geometries, so `EARLY`/`LATE` could likely
+  never even be reached by the classifier for these hazards. Ranges were
+  derived from each hazard's own `demo_points` by a rough formula (bracket
+  around the first ground point → first elevated/rising point), **not visually
+  tuned** — expect to nudge a few once you see them firing in-game.
 
-**This means the original floating-during-pitfall bug is back and unfixed.**
-User said "we'll get back to the dog error later" — this is that open item.
-Both working fix directions are documented above if picking this back up; the
-second one (ground-height + tolerance, gated correctly so ordinary jumps still
-track) is the one that actually worked in both regards before being reverted
-for unrelated-seeming reasons (worth asking the user directly what specifically
-was still broken about it, since the verified behavior looked correct - it may
-be worth re-implementing carefully, or there may be a diegetic-side interaction
-that wasn't tested).
+New message conventions used (for consistency, not verified in-editor):
+- Gap `NO_JUMP`: "You didn't jump. Jump to clear the gap."
+- Gap `JUMPED_TOO_EARLY`: "Jumped too early. Take off later."
+- Gap `JUMPED_TOO_LATE`: "Jumped too late. Take off earlier."
+- Gap new `GENERIC` (when the old message got reclaimed by a specific tag):
+  "Missed the gap even with good timing. Jump with more distance."
+- Platform `NO_JUMP`: "You didn't jump. Jump onto the platform."
+- Platform `JUMPED_TOO_EARLY`: "Jumped too early. Wait for the platform to
+  arrive."
+- Platform `JUMPED_TOO_LATE`: "Jumped too late. Board the platform sooner."
+- Edge (`WRONG_DIRECTION`, retagged from the original single message): "Walked
+  off the ledge. Move toward the platform." (unchanged text, just correctly
+  tagged now)
+- Edge new `GENERIC`: "Fell off the ledge. Move toward the platform to stay
+  safe."
 
-### 5. Wording pass — presumptuous / non-actionable messages
-Two related but distinct issues found and fixed across all 5 levels:
-- **Presumes prior failure**: `Level1` `Gap2FailureData` said "Same mistake.
-  Take off earlier." — fixed to "Jumped too late. Take off earlier." `Level2`
-  had the same issue on *both* its gap hazards ("Late again. Take off
-  earlier." — one of them was even the level's *first* gap, so "again" made no
-  sense regardless) — fixed the same way.
-- **Vague / not actionable**: `Level2`'s `gap_control_jump`, `Level3`'s
-  `tight_gap_2`, `Level4`'s `gap_control_jump_4` all said something like "Jump
-  was wild. Aim a smooth arc." — doesn't tell the player what to *do*. All
-  three use the `overshoot` cue, meaning the real cause is releasing the
-  direction key mid-air (established last session: no air deceleration in
-  `Player.gd`, so letting go kills horizontal velocity instantly and drops you
-  straight down). Replaced all three with: **"Let go mid-jump. Keep holding the
-  direction key."** `Level5` has no equivalent hazard, so nothing to change
-  there.
+Cue convention applied consistently: `NO_JUMP → stumble`, `JUMPED_TOO_EARLY →
+recoil`, `JUMPED_TOO_LATE → overshoot`; `GENERIC` kept whatever cue the
+original single-variant message already had.
 
-### 6. Spikes — built the full mistake-classification content
-Diagnosed (not a bug, a content gap): every spikes hazard across all 5 levels
-had exactly one `FailureData` variant, so the real classification machinery ran
-but always fell back to the same message regardless of what happened.
+Verified by static count only: grepped `mistake = 0` (NO_JUMP tag count) per
+level file and confirmed it matches the expected number of jump-timing hazards
+per level (gaps + platforms + spikes), and confirmed no `failure_variants`
+array anywhere still holds only one entry except where that's structurally
+correct (there are none left — even edge hazards now have 2).
 
-Built `spikes_intro` (Level1) as the test case first, confirmed with the user,
-then rolled the same pattern out to all 10 spikes hazards across Level1–5.
-
-**Design choice, deliberately different from the pit hazards**: spikes have
-`hides_player = false` (unlike pits), so the player's own `cause_cue` reaction
-plays *visibly* — a real diegetic channel pits never had. So the dog's demo
-route is kept **constant** across all four mistake variants for every spikes
-hazard (just extended with the same flat run-up leg as the pit, for the
-run/pause/jump visual); differentiation rides entirely on the player's cue +
-message, not on the dog's route. Cue mapping: `NO_JUMP → stumble`,
-`JUMPED_TOO_EARLY → recoil`, `JUMPED_TOO_LATE → overshoot`. `GENERIC` kept
-its pre-existing cue (`recoil` everywhere), which means **GENERIC and EARLY
-look diegetically identical** (same cue, same route) — a known, accepted
-limitation given only 3 cue poses exist for 4 mistake categories; the two are
-still distinguishable non-diegetically via message text. Worth revisiting if
-more cue poses ever get authored.
-
-Messages (shortened once mid-session — first drafts were too long for the
-HUD): `NO_JUMP` → "You didn't jump. Jump over the spikes.", `EARLY` → "Jumped
-too early. Take off later.", `LATE` → "Jumped too late. Take off sooner."
-Each hazard's pre-existing GENERIC message/cue was left untouched (they carry
-nice level-specific flavor text, e.g. "The last obstacle. Jump early.").
-
-`expected_takeoff_range` retuned per hazard so `EARLY`/`LATE` are actually
-reachable in play (was previously either default or, for Level1's pit, tuned
-so wide that only `GENERIC` could ever fire):
-- Level1 `SpikesTrigger`, Level3 all three, Level4, Level5 all three: `(-70, -18)`
-- Level2 both spikes hazards: `(-75, -22)` (slightly wider obstacle there)
-
-All 10 verified headlessly: 4 variants each, correct `mistake` tags
-`[GENERIC, NO_JUMP, EARLY, LATE]`, classification thresholds resolve correctly
-given each hazard's window.
-
-## Verification method used throughout (headless Godot, no editor needed)
-
-```bash
-GODOT="/Applications/Godot.app/Contents/MacOS/Godot"
-cd /Users/thatokalagobe/imy-761-research-project/research-game
-
-# Quick parse/compile check for a level:
-"$GODOT" --headless --path . res://levels/Level1.tscn --quit-after 5
-
-# For anything needing autoloads (FailureController, Config, etc.) or real
-# gameplay logic, write a small SceneTree script using _initialize() (NOT
-# _init() - autoloads aren't registered yet at _init() time) and run it with:
-"$GODOT" --headless --path . -s res://some_tmp_script.gd
-# then rm the tmp script. Real physics (is_on_floor(), move_and_slide()) needs
-# actual frames to run - use `await physics_frame` in a loop inside
-# _initialize(), driving input via Input.action_press()/action_release(), not
-# a single synchronous call (body_test_motion errors with "body->get_space()
-# is null" if you skip this and call move_and_slide() before any real frame
-# has run).
+**This work is uncommitted.** `git status --short` right now:
 ```
+ M research-game/levels/Level1.tscn
+ M research-game/levels/Level2.tscn
+ M research-game/levels/Level3.tscn
+ M research-game/levels/Level4.tscn
+ M research-game/levels/Level5.tscn
+```
+(Only the 5 level scene files — no script changes were needed, this was pure
+content authoring using the existing `FailureData`/`Hazard.gd` machinery from
+last session.)
 
-The bark sprite import was done the same way: `"$GODOT" --headless --editor
---quit-after 20 --path .` once, to force a filesystem scan/reimport of the new
-PNGs (generates the `.import` files Godot needs).
+## Open thread: spikes' GENERIC message wording
 
-## What's NOT done / open items for next session
+User flagged that spikes' `GENERIC` message — "Hit the spikes. Jump over
+them." (Level1/2/4) — isn't informative ("doesn't tell the player anything").
+Discussed two possible root causes: (a) the classifier is mislabeling genuine
+late/early jumps as `GENERIC` because `expected_takeoff_range` is too wide, or
+(b) the message itself just needs better wording even though the classifier is
+technically correct (timing was "in range" but the player still hit the
+spikes some other way, e.g. jump too shallow).
 
-1. **Non-diegetic companion floating during a pitfall death is unfixed** (see
-   §4 above — reverted per user request, root cause and two working fix
-   directions are documented). Ask the user what specifically felt broken
-   about the second (ground-height/tolerance) attempt before retrying, since
-   its own verification looked correct on both axes (no float, still tracks
-   ordinary jumps).
-2. **Gap/pit hazards on Level2–5 still have only one variant each** (only
-   wording was fixed, not full `NO_JUMP`/`EARLY`/`LATE` content) — same
-   situation the pit hazards were in before this session's work on Level1.
-   `PitTrigger` (Level1) is the only fully-built gap/pit hazard with all four
-   mistake variants; `Gap2Trigger` (Level1) only got its message fixed, not new
-   variants.
-3. **Moving-platform hazards** (`platform_mistimed`, `platform_mistimed_2`,
-   `final_platform_1`, `final_platform_2`) are still fully deferred — this was
-   lecturer point #3 from two sessions ago, blocked on `MovingPlatform.gd`
-   exposing live position/phase before timing-based classification is possible
-   there.
-4. **Lecturer point #2** (physical-reaction wording unclear in
-   `scripts/README.md` or similar) — still fully unstarted.
-5. **Nothing has been committed.** `git status --short` right now:
-   ```
-    M research-game/assets/dog/DogSpriteFrames.tres
-    M research-game/levels/Level1.tscn
-    M research-game/levels/Level2.tscn
-    M research-game/levels/Level3.tscn
-    M research-game/levels/Level4.tscn
-    M research-game/levels/Level5.tscn
-    M research-game/scripts/ArrowOverlay.gd
-    M research-game/scripts/Companion.gd
-    M research-game/scripts/Config.gd
-    M research-game/scripts/DiegeticPresenter.gd
-    M research-game/scripts/FailureController.gd
-    M research-game/scripts/FailureData.gd
-    M research-game/scripts/FailurePresenter.gd
-    M research-game/scripts/Hazard.gd
-    M research-game/scripts/NonDiegeticPresenter.gd
-    M research-game/scripts/Player.gd
-    M research-game/scripts/README.md
-   ?? research-game/assets/dog/Pixel-art_sprite_sheet_o-bark/
-   ```
-   `scripts/README.md` was updated last session (§5, authoring workflow) — not
-   touched this session, still uncommitted from before. Worth reviewing the
-   whole diff and deciding on commit granularity before committing (one big
-   commit vs. splitting by concern - dog mechanism / spikes content / wording
-   pass are all fairly separable if the user wants smaller commits).
+User picked (b) in-conversation, a rewrite ("Jump wasn't high enough to clear
+them. Jump with more height.") was drafted and applied to
+`spikes_intro`/`spikes_no_jump`/`spikes_no_jump_2`/`spikes_tight_1`, **then the
+user asked to undo it** before it was rolled out further (reason not stated —
+possibly reconsidering the wording, possibly Thato wants to pick her own
+phrasing). All four were reverted; verified no trace of the new text remains
+anywhere in the 5 level files. **The spikes GENERIC message is back to its
+original per-level flavor text, unchanged from before this session, and is
+still an open item** — ask what wording direction is wanted before touching it
+again.
+
+## What's NOT done / open items carried forward
+
+1. **Non-diegetic companion floating during a pitfall death is still unfixed.**
+   This goes back two sessions (originally investigated, two fix directions
+   were built and verified against real physics, then explicitly reverted by
+   the user for reasons not fully captured). Confirmed this session that no
+   trace of either fix attempt (`freeze()`, `_ground_y`, `FALL_TOLERANCE`)
+   remains in `Companion.gd` — it's back to the plain lerp-follow with no
+   ground awareness. If picking this back up, the ground-height/tolerance
+   approach (distinguish "same-height jump" from "sinking below launch
+   height") is the one that verified correctly on both axes before being
+   reverted; ask the user directly what still felt wrong about it.
+2. **Spikes' `GENERIC` message wording** — see above, explicitly deferred.
+3. **`expected_takeoff_range` values added this session are unverified in the
+   editor** — they're formula-derived from `demo_points`, not playtested. Walk
+   through each gap/platform hazard in Level1–5 and confirm `EARLY`/`LATE`
+   actually trigger at the right moments; nudge the ranges if a genuinely-late
+   jump still reads as `GENERIC` or vice versa.
+4. Nothing else new was raised this session beyond what's above — ask the user
+   what's next from their lecturer-feedback list.
 
 ## Suggested opening move for next session
 
-Ask the user: (a) commit what's here now, or keep building first; (b) pick up
-the companion-floating-in-pit fix, or move on to gap/pit content for
-Level2–5 (mirroring what spikes just got), or something else entirely.
+Open the project in the Godot editor and playtest Level1–5's gap and
+moving-platform hazards specifically for the three failure modes (skip the
+jump, jump early, jump late) to confirm the new messages fire correctly and
+the `expected_takeoff_range` windows feel right. Then decide: commit this
+content pass (all 5 level files), and separately settle on spikes' `GENERIC`
+wording before touching those files again.

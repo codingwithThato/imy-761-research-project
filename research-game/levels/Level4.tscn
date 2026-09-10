@@ -62,14 +62,64 @@ script = ExtResource("8_faildata")
 cause_id = "gap_late_jump_4"
 cause_message = "Jumped too late. Take off earlier."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "overshoot"
+mistake = 2
+
+[sub_resource type="Resource" id="Gap1GenericFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_1_generic_4"
+cause_message = "Missed the gap even with good timing. Jump with more distance."
+demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "stumble"
+mistake = 4
+
+[sub_resource type="Resource" id="Gap1NoJumpFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_1_no_jump_4"
+cause_message = "You didn't jump. Jump to clear the gap."
+demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "stumble"
+mistake = 0
+
+[sub_resource type="Resource" id="Gap1JumpedEarlyFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_1_jumped_early_4"
+cause_message = "Jumped too early. Take off later."
+demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "recoil"
+mistake = 1
 
 [sub_resource type="Resource" id="PlatformFailureData"]
 script = ExtResource("8_faildata")
 cause_id = "platform_mistimed"
 cause_message = "Too early. Wait for the platform, then ride it."
 demo_points = PackedVector2Array(-150, 0, -80, -20, 0, -20, 80, -20, 150, 0)
+cause_cue = "recoil"
+mistake = 1
+
+[sub_resource type="Resource" id="PlatformGenericFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "platform_generic"
+cause_message = "Missed the platform ride. Board it and stay on until it reaches the other side."
+demo_points = PackedVector2Array(-150, 0, -80, -20, 0, -20, 80, -20, 150, 0)
 cause_cue = "stumble"
+mistake = 4
+
+[sub_resource type="Resource" id="PlatformNoJumpFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "platform_no_jump"
+cause_message = "You didn't jump. Jump onto the platform."
+demo_points = PackedVector2Array(-150, 0, -80, -20, 0, -20, 80, -20, 150, 0)
+cause_cue = "stumble"
+mistake = 0
+
+[sub_resource type="Resource" id="PlatformJumpedLateFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "platform_jumped_late"
+cause_message = "Jumped too late. Board the platform sooner."
+demo_points = PackedVector2Array(-150, 0, -80, -20, 0, -20, 80, -20, 150, 0)
+cause_cue = "overshoot"
+mistake = 2
 
 [sub_resource type="Resource" id="SpikesFailureData"]
 script = ExtResource("8_faildata")
@@ -125,6 +175,31 @@ cause_id = "gap_control_jump_4"
 cause_message = "Let go mid-jump. Keep holding the direction key."
 demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
 cause_cue = "overshoot"
+mistake = 4
+
+[sub_resource type="Resource" id="Gap2NoJumpFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_2_no_jump_4"
+cause_message = "You didn't jump. Jump to clear the gap."
+demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "stumble"
+mistake = 0
+
+[sub_resource type="Resource" id="Gap2JumpedEarlyFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_2_jumped_early_4"
+cause_message = "Jumped too early. Take off later."
+demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "recoil"
+mistake = 1
+
+[sub_resource type="Resource" id="Gap2JumpedLateFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "gap_2_jumped_late_4"
+cause_message = "Jumped too late. Take off earlier."
+demo_points = PackedVector2Array(-75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
+cause_cue = "overshoot"
+mistake = 2
 
 [sub_resource type="Resource" id="Platform2FailureData"]
 script = ExtResource("8_faildata")
@@ -132,6 +207,31 @@ cause_id = "platform_mistimed_2"
 cause_message = "Wider platform. Wait, then ride it across."
 demo_points = PackedVector2Array(-125, 0, -60, -20, 0, -20, 60, -20, 125, 0)
 cause_cue = "stumble"
+mistake = 4
+
+[sub_resource type="Resource" id="Platform2NoJumpFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "platform_2_no_jump"
+cause_message = "You didn't jump. Jump onto the platform."
+demo_points = PackedVector2Array(-125, 0, -60, -20, 0, -20, 60, -20, 125, 0)
+cause_cue = "stumble"
+mistake = 0
+
+[sub_resource type="Resource" id="Platform2JumpedEarlyFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "platform_2_jumped_early"
+cause_message = "Jumped too early. Wait for the platform to arrive."
+demo_points = PackedVector2Array(-125, 0, -60, -20, 0, -20, 60, -20, 125, 0)
+cause_cue = "recoil"
+mistake = 1
+
+[sub_resource type="Resource" id="Platform2JumpedLateFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "platform_2_jumped_late"
+cause_message = "Jumped too late. Board the platform sooner."
+demo_points = PackedVector2Array(-125, 0, -60, -20, 0, -20, 60, -20, 125, 0)
+cause_cue = "overshoot"
+mistake = 2
 
 [sub_resource type="RectangleShape2D" id="EdgeShape"]
 size = Vector2(150, 300)
@@ -142,6 +242,15 @@ cause_id = "ran_off_start_edge"
 cause_message = "Walked off the ledge. Move toward the platform."
 demo_points = PackedVector2Array(-50, 0, 50, 0)
 cause_cue = "stumble"
+mistake = 3
+
+[sub_resource type="Resource" id="EdgeGenericFailureData"]
+script = ExtResource("8_faildata")
+cause_id = "edge_generic"
+cause_message = "Fell off the ledge. Move toward the platform to stay safe."
+demo_points = PackedVector2Array(-50, 0, 50, 0)
+cause_cue = "stumble"
+mistake = 4
 
 [node name="Level4" type="Node2D"]
 script = ExtResource("9_level4")
@@ -311,7 +420,8 @@ shape = SubResource("CheckpointShape")
 [node name="Gap1Trigger" type="Area2D" parent="."]
 position = Vector2(425, 400)
 script = ExtResource("2_hazard")
-failure_variants = Array[FailureData]([SubResource("Gap1FailureData")])
+failure_variants = Array[FailureData]([SubResource("Gap1FailureData"), SubResource("Gap1NoJumpFailureData"), SubResource("Gap1JumpedEarlyFailureData"), SubResource("Gap1GenericFailureData")])
+expected_takeoff_range = Vector2(-65, -35)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Gap1Trigger"]
 position = Vector2(0, 225)
@@ -320,8 +430,9 @@ shape = SubResource("Gap1Shape")
 [node name="PlatformGapTrigger" type="Area2D" parent="."]
 position = Vector2(800, 400)
 script = ExtResource("2_hazard")
-failure_variants = Array[FailureData]([SubResource("PlatformFailureData")])
+failure_variants = Array[FailureData]([SubResource("PlatformFailureData"), SubResource("PlatformNoJumpFailureData"), SubResource("PlatformJumpedLateFailureData"), SubResource("PlatformGenericFailureData")])
 platform_path = NodePath("../MovingPlatform")
+expected_takeoff_range = Vector2(-140, -90)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformGapTrigger"]
 position = Vector2(0, 225)
@@ -391,7 +502,8 @@ shape = SubResource("CheckpointShape")
 [node name="Gap2Trigger" type="Area2D" parent="."]
 position = Vector2(1425, 400)
 script = ExtResource("2_hazard")
-failure_variants = Array[FailureData]([SubResource("Gap2FailureData")])
+failure_variants = Array[FailureData]([SubResource("Gap2FailureData"), SubResource("Gap2NoJumpFailureData"), SubResource("Gap2JumpedEarlyFailureData"), SubResource("Gap2JumpedLateFailureData")])
+expected_takeoff_range = Vector2(-65, -35)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Gap2Trigger"]
 position = Vector2(0, 225)
@@ -400,8 +512,9 @@ shape = SubResource("Gap2Shape")
 [node name="PlatformGap2Trigger" type="Area2D" parent="."]
 position = Vector2(1775, 400)
 script = ExtResource("2_hazard")
-failure_variants = Array[FailureData]([SubResource("Platform2FailureData")])
+failure_variants = Array[FailureData]([SubResource("Platform2FailureData"), SubResource("Platform2NoJumpFailureData"), SubResource("Platform2JumpedEarlyFailureData"), SubResource("Platform2JumpedLateFailureData")])
 platform_path = NodePath("../MovingPlatform2")
+expected_takeoff_range = Vector2(-115, -70)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformGap2Trigger"]
 position = Vector2(0, 225)
@@ -431,7 +544,7 @@ shape = SubResource("CheckpointShape")
 [node name="EdgeTrigger" type="Area2D" parent="."]
 position = Vector2(-75, 400)
 script = ExtResource("2_hazard")
-failure_variants = Array[FailureData]([SubResource("EdgeFailureData")])
+failure_variants = Array[FailureData]([SubResource("EdgeFailureData"), SubResource("EdgeGenericFailureData")])
 hazard_kind = "direction"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EdgeTrigger"]
