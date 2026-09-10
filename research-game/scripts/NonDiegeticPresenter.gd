@@ -27,7 +27,7 @@ func present(data: FailureData, origin: Vector2, context: Dictionary = {}) -> vo
 		hud_label.visible = true
 
 	if arrow != null and arrow.has_method("show_path"):
-		arrow.show_path(data.effective_world_points(origin, context))
+		arrow.show_path(data.effective_world_points(origin, context), context.get("platform"))
 
 	# The companion stays neutral - it does NOT demonstrate in this condition.
 	var companion := get_tree().get_first_node_in_group("companion")

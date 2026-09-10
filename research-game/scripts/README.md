@@ -75,15 +75,30 @@ in `_ready()` so there's a respawn point before the first checkpoint.
    - `demo_points` — the correct route, as offsets from this hazard's position
 4. On the hazard itself, set `hazard_kind`:
    - `jump_obstacle` (default) — classification compares where the player
-     took off against `expected_takeoff_range` (world-x offsets from this
-     hazard) to tell early/late/no-jump apart.
+	 took off against `expected_takeoff_range` (world-x offsets from this
+	 hazard) to tell early/late/no-jump apart.
    - `direction` — for hazards failed by moving the wrong way (e.g. the
-     start-edge hazards), compared against `expected_direction`.
+	 start-edge hazards), compared against `expected_direction`.
 
 `demo_points` is the important one: the companion walks it in the diegetic
 condition and the overlay arrow traces the same points in the non-diegetic
 condition. One data source, two channels — per mistake, once a hazard has
 more than one variant.
+
+### 5b. Authoring a moving-platform hazard
+
+Set `platform_path` on the hazard to point at the `MovingPlatform` node it
+sits under/after (e.g. `../MovingPlatform`). `demo_points` keeps the same
+shape as any other jump hazard — ground, up onto the platform, across,
+down off it, ground — but because the platform never stops oscillating
+(even during a failure), both presenters ignore the *absolute* position of
+the interior points and instead use them only to derive one fixed **ride
+anchor**, expressed as an offset from the platform's rest position. That
+offset is reapplied to the platform's *live* position every frame, so the
+dog/arrow always land on wherever the platform actually is when the
+failure plays out, not a stale guess from wherever it happened to be at
+authoring time. See `Companion._demonstrate_platform_ride()` and
+`ArrowOverlay._draw_platform_path()` for the mechanism.
 
 `Hazard.gd` classifies the player's actual pre-failure action (from
 `Player.get_failure_context()`) into a mistake and picks the matching

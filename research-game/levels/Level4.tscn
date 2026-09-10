@@ -321,6 +321,7 @@ shape = SubResource("Gap1Shape")
 position = Vector2(800, 400)
 script = ExtResource("2_hazard")
 failure_variants = Array[FailureData]([SubResource("PlatformFailureData")])
+platform_path = NodePath("../MovingPlatform")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformGapTrigger"]
 position = Vector2(0, 225)
@@ -400,6 +401,7 @@ shape = SubResource("Gap2Shape")
 position = Vector2(1775, 400)
 script = ExtResource("2_hazard")
 failure_variants = Array[FailureData]([SubResource("Platform2FailureData")])
+platform_path = NodePath("../MovingPlatform2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformGap2Trigger"]
 position = Vector2(0, 225)

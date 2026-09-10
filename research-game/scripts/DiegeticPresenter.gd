@@ -29,7 +29,8 @@ func present(data: FailureData, origin: Vector2, context: Dictionary = {}) -> vo
 			data.effective_world_points(origin, context),
 			Config.DEMO_DURATION,
 			data.emphasize_hesitation,
-			data.pause_at_index(origin, context)
+			data.pause_at_index(origin, context),
+			context.get("platform")
 		)
 
 	if cue_sound != null:

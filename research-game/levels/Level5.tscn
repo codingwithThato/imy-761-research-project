@@ -474,6 +474,7 @@ texture = ExtResource("92_spikestex")
 position = Vector2(660, 400)
 script = ExtResource("2_hazard")
 failure_variants = Array[FailureData]([SubResource("Platform1FailureData")])
+platform_path = NodePath("../MovingPlatform1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformGap1Trigger"]
 position = Vector2(0, 225)
@@ -520,6 +521,7 @@ texture = ExtResource("92_spikestex")
 position = Vector2(1280, 400)
 script = ExtResource("2_hazard")
 failure_variants = Array[FailureData]([SubResource("Platform2FailureData")])
+platform_path = NodePath("../MovingPlatform2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformGap2Trigger"]
 position = Vector2(0, 225)

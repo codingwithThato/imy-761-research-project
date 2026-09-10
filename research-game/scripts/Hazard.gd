@@ -27,6 +27,16 @@ extends Area2D
 
 @export var failure_variants: Array[FailureData] = []
 @export_enum("jump_obstacle", "direction") var hazard_kind: String = "jump_obstacle"
+## Optional: the MovingPlatform this hazard sits under/after. When set, it is
+## passed to the presenters as context.platform so the demonstration can
+## board/ride/disembark the platform's LIVE position instead of a static
+## pre-authored guess - see Companion._demonstrate_platform_ride() and
+## ArrowOverlay._draw_platform_path(). No change to authoring needed beyond
+## this: the existing demo_points shape (ground -> onto platform -> across
+## -> off platform -> ground) already works, since the ride anchor is
+## derived as the average of the interior points, expressed as an offset
+## from the platform's rest position.
+@export var platform_path: NodePath = NodePath()
 ## World-x offsets from this hazard's position; only used when
 ## hazard_kind == "jump_obstacle". A jump whose takeoff x falls before this
 ## range is JUMPED_TOO_EARLY, after it is JUMPED_TOO_LATE, inside it is
@@ -48,6 +58,10 @@ func _on_body_entered(body: Node2D) -> void:
 	var ctx: Dictionary = body.get_failure_context() if body.has_method("get_failure_context") else {}
 	var mistake := _classify(ctx)
 	var data := _select_variant(mistake)
+	if platform_path != NodePath():
+		var plat := get_node_or_null(platform_path)
+		if plat != null:
+			ctx["platform"] = plat
 	FailureController.trigger_failure(data, global_position, ctx)
 
 

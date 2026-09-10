@@ -16,6 +16,12 @@ extends Control
 
 var _world_points: PackedVector2Array = PackedVector2Array()
 var _showing := false
+## Set when the route rides a MovingPlatform (see Hazard.platform_path). When
+## present, the board/disembark portion of the path is recomputed from the
+## platform's LIVE position every redraw instead of the static authored
+## points - same fix as Companion._demonstrate_platform_ride(), applied to
+## the arrow instead of the dog.
+var _platform: Node2D = null
 
 ## Height (px) a leg needs to rise before it counts as part of a jump arc
 ## rather than a flat run-up. Matches Companion.gd's JUMP_ARC_HEIGHT so both
@@ -28,8 +34,9 @@ func _ready() -> void:
 	visible = false
 
 
-func show_path(world_points: PackedVector2Array) -> void:
+func show_path(world_points: PackedVector2Array, platform: Node2D = null) -> void:
 	_world_points = world_points
+	_platform = platform
 	_showing = true
 	visible = true
 	queue_redraw()
@@ -39,6 +46,7 @@ func hide_path() -> void:
 	_showing = false
 	visible = false
 	_world_points = PackedVector2Array()
+	_platform = null
 	queue_redraw()
 
 
@@ -50,6 +58,10 @@ func _process(_delta: float) -> void:
 
 func _draw() -> void:
 	if not _showing or _world_points.size() < 2:
+		return
+
+	if _platform != null and is_instance_valid(_platform) and _world_points.size() >= 4:
+		_draw_platform_path()
 		return
 
 	var trimmed := _trim_leading_run(_world_points)
@@ -97,6 +109,60 @@ func _trim_leading_run(points: PackedVector2Array) -> PackedVector2Array:
 		if absf(points[i].y - points[i - 1].y) > JUMP_ARC_HEIGHT:
 			return points.slice(i - 1, points.size())
 	return points
+
+
+## MOVING PLATFORM: recomputes the ride anchor from the platform's LIVE
+## position every redraw (same rest-offset trick as
+## Companion._demonstrate_platform_ride() - see its comment for why this
+## offset carries no x component, only the surface-height y) so the marker
+## always sits on top of the actual platform sprite, wherever it currently
+## is, instead of a static point that drifts out of sync with a platform
+## that never stops moving. Draws explicit cues per the "where to stand /
+## when to jump / where to move" ask: a hollow ring at the live ride anchor
+## ("stand here, and note this moves with the platform"), then a line +
+## arrowhead from that same live point to the landing spot ("jump here, to
+## here").
+func _draw_platform_path() -> void:
+	var rest: Vector2 = _platform.get_rest_position() if _platform.has_method("get_rest_position") else _platform.global_position
+	var interior_y_sum := 0.0
+	for i in range(1, _world_points.size() - 1):
+		interior_y_sum += _world_points[i].y
+	var surface_y: float = interior_y_sum / float(_world_points.size() - 2)
+	var ride_offset := Vector2(0.0, surface_y - rest.y)
+	var start: Vector2 = _world_points[0]
+	var end: Vector2 = _world_points[_world_points.size() - 1]
+	var anchor: Vector2 = _platform.global_position + ride_offset
+
+	var xf := get_viewport().get_canvas_transform()
+	var p_start := xf * start
+	var p_anchor := xf * anchor
+	var p_end := xf * end
+
+	var approach := _round_corners(PackedVector2Array([p_start, p_anchor]))
+	var depart := _round_corners(PackedVector2Array([p_anchor, p_end]))
+	draw_polyline(approach, line_colour, line_width, true)
+	draw_polyline(depart, line_colour, line_width, true)
+	for p in approach:
+		draw_circle(p, line_width * 0.5, line_colour)
+	for p in depart:
+		draw_circle(p, line_width * 0.5, line_colour)
+
+	# "Stand here" - hollow ring at the live ride anchor.
+	draw_arc(p_anchor, head_size * 0.9, 0.0, TAU, 24, line_colour, line_width * 0.8, true)
+
+	# Arrowhead pointing from the ride anchor at the actual landing spot.
+	var dir := (p_end - p_anchor).normalized()
+	if dir == Vector2.ZERO:
+		return
+	var left := dir.rotated(deg_to_rad(150.0)) * head_size
+	var right := dir.rotated(deg_to_rad(-150.0)) * head_size
+	draw_colored_polygon(
+		PackedVector2Array([p_end, p_end + left, p_end + right]),
+		line_colour
+	)
+	draw_circle(p_end, head_size * 0.12, line_colour)
+	draw_circle(p_end + left, head_size * 0.2, line_colour)
+	draw_circle(p_end + right, head_size * 0.2, line_colour)
 
 
 ## Replaces each interior corner with a short quadratic-bezier arc so a

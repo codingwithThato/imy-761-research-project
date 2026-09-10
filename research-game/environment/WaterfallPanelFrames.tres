@@ -1,6 +1,6 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://c7e0xra3s4hi6"]
 
-[ext_resource type="Texture2D" uid="uid://b8ygjaj1yjv27" path="res://assets/Backgroud/Backgroud (4)/backgroud (4)1.png" id="1_f01"]
+[ext_resource type="Texture2D" uid="uid://bay7p7qgt6bm0" path="res://assets/Backgroud/Backgroud (4)/backgroud (4)1.png" id="1_f01"]
 [ext_resource type="Texture2D" uid="uid://b8vyqfvva1vhi" path="res://assets/Backgroud/Backgroud (4)/backgroud (4)2.png" id="2_f02"]
 [ext_resource type="Texture2D" uid="uid://ccsk48x7w7c1u" path="res://assets/Backgroud/Backgroud (4)/backgroud (4)3.png" id="3_f03"]
 [ext_resource type="Texture2D" uid="uid://bgv3fqabis76f" path="res://assets/Backgroud/Backgroud (4)/backgroud (4)4.png" id="4_f04"]

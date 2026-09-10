@@ -21,3 +21,12 @@ func _ready() -> void:
 		.set_trans(Tween.TRANS_SINE)
 	tw.tween_property(self, "position", _start, one_way_duration)\
 		.set_trans(Tween.TRANS_SINE)
+
+
+## The position this platform was authored at (before it starts oscillating).
+## Demo routes author their board/disembark points assuming the platform is
+## here - callers re-derive a live offset from this reference and reapply it
+## to the platform's current position, so the demonstration tracks wherever
+## the platform actually is instead of a stale, pre-authored guess.
+func get_rest_position() -> Vector2:
+	return _start
