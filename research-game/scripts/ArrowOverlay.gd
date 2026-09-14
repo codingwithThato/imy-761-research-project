@@ -22,6 +22,12 @@ var _showing := false
 ## points - same fix as Companion._demonstrate_platform_ride(), applied to
 ## the arrow instead of the dog.
 var _platform: Node2D = null
+## Index of a JUMPED_TOO_EARLY waypoint inserted into _world_points (see
+## FailureData.pause_at_index()), or -1 if none. That waypoint is a
+## ground-level detour point, not a real ride point - _draw_platform_path()
+## needs this to exclude it from the platform's surface-height average, same
+## as Companion._demonstrate_platform_ride() does.
+var _pause_at_index := -1
 
 ## Height (px) a leg needs to rise before it counts as part of a jump arc
 ## rather than a flat run-up. Matches Companion.gd's JUMP_ARC_HEIGHT so both
@@ -34,9 +40,10 @@ func _ready() -> void:
 	visible = false
 
 
-func show_path(world_points: PackedVector2Array, platform: Node2D = null) -> void:
+func show_path(world_points: PackedVector2Array, platform: Node2D = null, pause_at_index: int = -1) -> void:
 	_world_points = world_points
 	_platform = platform
+	_pause_at_index = pause_at_index
 	_showing = true
 	visible = true
 	queue_redraw()
@@ -47,6 +54,7 @@ func hide_path() -> void:
 	visible = false
 	_world_points = PackedVector2Array()
 	_platform = null
+	_pause_at_index = -1
 	queue_redraw()
 
 
@@ -140,10 +148,19 @@ func _trim_to_final_jump(points: PackedVector2Array) -> PackedVector2Array:
 ## here").
 func _draw_platform_path() -> void:
 	var rest: Vector2 = _platform.get_rest_position() if _platform.has_method("get_rest_position") else _platform.global_position
+
+	# A JUMPED_TOO_EARLY waypoint (see _pause_at_index above) is a
+	# ground-level detour, not a real ride point - exclude it from the
+	# surface-height average so this variant's marker anchors to the same
+	# ride height as every other one, same fix as
+	# Companion._demonstrate_platform_ride().
+	var interior_start := 1
+	if _pause_at_index > 0:
+		interior_start = _pause_at_index + 1
 	var interior_y_sum := 0.0
-	for i in range(1, _world_points.size() - 1):
+	for i in range(interior_start, _world_points.size() - 1):
 		interior_y_sum += _world_points[i].y
-	var surface_y: float = interior_y_sum / float(_world_points.size() - 2)
+	var surface_y: float = interior_y_sum / float(_world_points.size() - 1 - interior_start)
 	var ride_offset := Vector2(0.0, surface_y - rest.y)
 	var start: Vector2 = _world_points[0]
 	var end: Vector2 = _world_points[_world_points.size() - 1]

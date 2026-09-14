@@ -28,7 +28,7 @@ func present(data: FailureData, origin: Vector2, context: Dictionary = {}) -> vo
 
 	var world_points := data.effective_world_points(origin, context)
 	if arrow != null and arrow.has_method("show_path"):
-		arrow.show_path(world_points, context.get("platform"))
+		arrow.show_path(world_points, context.get("platform"), data.pause_at_index(origin, context))
 
 	# The companion stays neutral - it does NOT demonstrate in this condition.
 	var companion := get_tree().get_first_node_in_group("companion")
