@@ -47,6 +47,7 @@ extends Area2D
 
 
 func _ready() -> void:
+	add_to_group("hazard")
 	body_entered.connect(_on_body_entered)
 	if failure_variants.is_empty():
 		push_warning("Hazard '%s' has no FailureData variants assigned." % name)

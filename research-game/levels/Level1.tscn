@@ -36,7 +36,7 @@ script = ExtResource("8_faildata")
 cause_id = "pit_late_jump"
 cause_message = "Jumped too late. Take off earlier."
 demo_points = PackedVector2Array(-150, 0, -75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
-cause_cue = "overshoot"
+cause_cue = "stumble"
 mistake = 2
 
 [sub_resource type="Resource" id="PitGenericFailureData"]
@@ -78,7 +78,7 @@ script = ExtResource("8_faildata")
 cause_id = "pit_late_jump_2"
 cause_message = "Jumped too late. Take off earlier."
 demo_points = PackedVector2Array(-150, 0, -75, 0, -25, -60, 25, -90, 75, -60, 125, 0)
-cause_cue = "overshoot"
+cause_cue = "stumble"
 mistake = 2
 
 [sub_resource type="Resource" id="Gap2GenericFailureData"]
@@ -113,7 +113,7 @@ size = Vector2(150, 300)
 script = ExtResource("8_faildata")
 cause_id = "spikes_intro"
 cause_message = "Hit the spikes. Jump over them."
-demo_points = PackedVector2Array(-80, 0, -30, 0, -8, -65, 15, -65, 38, 0)
+demo_points = PackedVector2Array(-80, 0, -30, 0, 4, -65, 38, 0)
 cause_cue = "recoil"
 hides_player = false
 mistake = 4
@@ -122,7 +122,7 @@ mistake = 4
 script = ExtResource("8_faildata")
 cause_id = "spikes_intro_no_jump"
 cause_message = "You didn't jump. Jump over the spikes."
-demo_points = PackedVector2Array(-80, 0, -30, 0, -8, -65, 15, -65, 38, 0)
+demo_points = PackedVector2Array(-80, 0, -30, 0, 4, -65, 38, 0)
 cause_cue = "stumble"
 hides_player = false
 mistake = 0
@@ -132,7 +132,7 @@ emphasize_hesitation = true
 script = ExtResource("8_faildata")
 cause_id = "spikes_intro_jumped_early"
 cause_message = "Jumped too early. Take off later."
-demo_points = PackedVector2Array(-80, 0, -30, 0, -8, -65, 15, -65, 38, 0)
+demo_points = PackedVector2Array(-80, 0, -30, 0, 4, -65, 38, 0)
 cause_cue = "recoil"
 hides_player = false
 mistake = 1
@@ -141,8 +141,8 @@ mistake = 1
 script = ExtResource("8_faildata")
 cause_id = "spikes_intro_jumped_late"
 cause_message = "Jumped too late. Take off sooner."
-demo_points = PackedVector2Array(-80, 0, -30, 0, -8, -65, 15, -65, 38, 0)
-cause_cue = "overshoot"
+demo_points = PackedVector2Array(-80, 0, -30, 0, 4, -65, 38, 0)
+cause_cue = "recoil"
 hides_player = false
 mistake = 2
 

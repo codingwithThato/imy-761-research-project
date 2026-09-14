@@ -25,6 +25,9 @@ var _last_jump_x := 0.0
 var _jumped_since_grounded := false
 var _last_move_dir := 0.0
 
+## The MovingPlatform currently underfoot, if any (see get_standing_platform()).
+var _standing_platform: Node2D = null
+
 
 func _ready() -> void:
 	add_to_group("player")
@@ -34,6 +37,7 @@ func _physics_process(delta: float) -> void:
 	if _locked:
 		velocity = Vector2.ZERO
 		move_and_slide()
+		_update_standing_platform()
 		return
 
 	if not is_on_floor():
@@ -65,6 +69,7 @@ func _physics_process(delta: float) -> void:
 		sprite.scale.x = absf(sprite.scale.x) * signf(dir)
 
 	move_and_slide()
+	_update_standing_platform()
 
 	if is_on_floor():
 		_play("run" if absf(velocity.x) > 1.0 else "idle")
@@ -119,3 +124,23 @@ func get_failure_context() -> Dictionary:
 func _play(anim: String) -> void:
 	if sprite != null and sprite.has_method("play"):
 		sprite.call("play", anim)
+
+
+## Refreshes _standing_platform from this frame's move_and_slide() collisions.
+## A MovingPlatform is identified by duck type (get_rest_position()), same as
+## Hazard.gd's platform_path convention, rather than a group tag.
+func _update_standing_platform() -> void:
+	_standing_platform = null
+	if not is_on_floor():
+		return
+	for i in range(get_slide_collision_count()):
+		var collider := get_slide_collision(i).get_collider()
+		if collider is Node2D and collider.has_method("get_rest_position"):
+			_standing_platform = collider
+			return
+
+
+## Called by Companion.gd so she can lock to the platform's own motion
+## instead of lerp-chasing a continuously moving target while riding one.
+func get_standing_platform() -> Node2D:
+	return _standing_platform

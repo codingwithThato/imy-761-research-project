@@ -20,33 +20,110 @@ extends Node2D
 @export var corner_smoothness: int = 6
 @onready var sprite: CanvasItem = $AnimatedSprite2D
 
-enum State { FOLLOWING, DEMONSTRATING, NEUTRAL }
+enum State { FOLLOWING, DEMONSTRATING, NEUTRAL, HOLDING }
 
 var _state: State = State.FOLLOWING
 var _player: Node2D = null
 var _tween: Tween = null
 
+## How long the player has gone without a movement/jump input, while following.
+var _player_idle_time := 0.0
+
 
 func _ready() -> void:
 	add_to_group("companion")
 	_player = get_tree().get_first_node_in_group("player")
+	FailureController.failure_started.connect(_on_failure_started)
+
+
+## The player is locked (and, for a hides_player hazard, about to fall out of
+## view) the instant a failure starts - but demonstrate()/stay_neutral() only
+## take over a beat later, after FEEDBACK_ONSET (and, for pit/gap/edge
+## hazards, FALL_REACT_TIME on top of that). Left in FOLLOWING for that
+## window, she'd keep lerping toward the player's now-frozen position, which
+## can be well above ground level mid-fall-arc (the fall/pit trigger zones
+## are tall) - reading as her floating up to meet a body that isn't moving
+## anymore. Freezing her here, in place, the instant the failure starts
+## closes that window; whichever state takes over next overrides this fine.
+func _on_failure_started(_data: FailureData) -> void:
+	if _state == State.FOLLOWING:
+		_state = State.HOLDING
+		_play_anim("idle")
 
 
 ## Below this, the dog is close enough to its follow spot to be considered
 ## "caught up" and idles instead of running.
 const CATCH_UP_DISTANCE := 12.0
 
+## How long the player must go without any movement/jump input before the
+## companion sits down beside them instead of standing idle - a bit of
+## charm for a player who stops to look around, not a gameplay signal.
+const IDLE_SIT_DELAY := 5.0
+
+## How far past a solid hazard's edge to keep the companion clear of it, so
+## she never ends up standing (or, with the idle-sit above, sitting) on top
+## of something dangerous just because the player parked nearby.
+const HAZARD_CLEARANCE := 20.0
+
 
 func _process(delta: float) -> void:
 	if _state != State.FOLLOWING:
+		_player_idle_time = 0.0
 		return
 	if _player == null or not is_instance_valid(_player):
 		_player = get_tree().get_first_node_in_group("player")
 		return
 	var target: Vector2 = _player.global_position + follow_offset
+
+	# Riding a moving platform: lock to it instead of lerp-chasing a target
+	# that never stops moving - the lag reads as her shuffling back and
+	# forth in place rather than standing still beside the player.
+	var riding_platform: Node2D = null
+	if _player.has_method("get_standing_platform"):
+		riding_platform = _player.get_standing_platform()
+	if riding_platform != null:
+		_player_idle_time = 0.0
+		_face(target.x - global_position.x)
+		_play_anim("idle")
+		global_position = target
+		return
+
+	target.x = _clear_of_solid_hazards(target.x)
 	_face(target.x - global_position.x)
-	_play_anim("run" if global_position.distance_to(target) > CATCH_UP_DISTANCE else "idle")
+
+	if absf(Input.get_axis("ui_left", "ui_right")) < 0.01 and not Input.is_action_pressed("ui_accept"):
+		_player_idle_time += delta
+	else:
+		_player_idle_time = 0.0
+
+	var caught_up := global_position.distance_to(target) <= CATCH_UP_DISTANCE
+	if caught_up and _player_idle_time >= IDLE_SIT_DELAY:
+		_play_anim("sit")
+	else:
+		_play_anim("run" if not caught_up else "idle")
 	global_position = global_position.lerp(target, clampf(follow_smoothing * delta, 0.0, 1.0))
+
+
+## Pushes a follow-target x clear of any "solid" hazard (one with a visible
+## Sprite2D - spikes today; any future hazard authored with real rendered
+## geometry gets this for free) so she never ends up standing, or now
+## sitting, on top of something dangerous just because the player parked
+## nearby. Only checks x: every hazard sits at ground level, same height she
+## always follows at, so a 1D check is enough.
+func _clear_of_solid_hazards(target_x: float) -> float:
+	for hazard in get_tree().get_nodes_in_group("hazard"):
+		if not (hazard is Node2D) or not hazard.has_node("Sprite2D"):
+			continue
+		var shape_node: CollisionShape2D = hazard.get_node_or_null("CollisionShape2D")
+		if shape_node == null or not (shape_node.shape is RectangleShape2D):
+			continue
+		var half_width: float = shape_node.shape.size.x * 0.5 + HAZARD_CLEARANCE
+		var center_x: float = hazard.global_position.x + shape_node.position.x
+		if absf(target_x - center_x) < half_width:
+			var left_edge := center_x - half_width
+			var right_edge := center_x + half_width
+			target_x = left_edge if absf(target_x - left_edge) < absf(target_x - right_edge) else right_edge
+	return target_x
 
 
 ## Vertical delta (px) a leg needs before it reads as part of a jump arc
@@ -73,6 +150,15 @@ const CROUCH_HOLD := 0.6
 ## the work of saying "not here", not just "here we go".
 const ABANDONED_PAUSE := 0.45
 
+## A "jump" group that isn't the route's LAST group is incidental scenery on
+## the way to the real hazard (e.g. hopping spikes before the actual pitfall
+## jump) - it never gets the emphasized bark/crouch beat (that beat belongs
+## solely to the hazard actually being taught; playing it twice pushes the
+## whole demonstration past Config.FEEDBACK_DURATION and the real jump gets
+## cut off before it plays). It's still given extra time below so it reads
+## as a deliberate hop rather than a blur.
+const INCIDENTAL_JUMP_SLOWDOWN := 1.8
+
 ## MOVING PLATFORM: how long each leg of a platform ride takes. Approach and
 ## depart are quick hops; the ride itself is held long enough to clearly read
 ## as "waiting on/riding the platform" rather than a blink-and-miss-it beat.
@@ -81,6 +167,13 @@ const PLATFORM_APPROACH_TIME := 0.35
 const PLATFORM_HOP_UP_TIME := 0.25
 const PLATFORM_RIDE_TIME := 1.0
 const PLATFORM_DEPART_TIME := 0.35
+
+## Used instead of PLATFORM_RIDE_TIME whenever the NO_JUMP bark/crouch beat
+## plays before boarding - that beat alone adds ~1.3s, and without trimming
+## the ride hold the whole sequence would blow past Config.FEEDBACK_DURATION
+## and get cut off before the depart hop plays (the same failure mode fixed
+## for composite gap+spike routes - see INCIDENTAL_JUMP_SLOWDOWN above).
+const PLATFORM_RIDE_TIME_EMPHASIZED := 0.5
 
 
 ## DIEGETIC: walk the correct route through the obstacle.
@@ -99,7 +192,7 @@ func demonstrate(world_points: PackedVector2Array, duration: float, emphasize_he
 	if world_points.size() < 2:
 		return
 	if platform != null and is_instance_valid(platform) and world_points.size() >= 4:
-		_demonstrate_platform_ride(world_points, platform)
+		_demonstrate_platform_ride(world_points, platform, emphasize_hesitation, pause_at_index)
 		return
 	_state = State.DEMONSTRATING
 	_set_translucent(true)
@@ -122,9 +215,10 @@ func demonstrate(world_points: PackedVector2Array, duration: float, emphasize_he
 	for g_index in range(groups.size()):
 		var group: Dictionary = groups[g_index]
 		var group_points: PackedVector2Array = group.points
+		var is_incidental_jump: bool = group.kind == "jump" and g_index < groups.size() - 1
 
 		if g_index > 0 and groups[g_index - 1].kind == "run" and group.kind == "jump":
-			if emphasize_hesitation:
+			if emphasize_hesitation and not is_incidental_jump:
 				_tween.tween_callback(_face_player)
 				_tween.tween_callback(_play_anim.bind("bark"))
 				_tween.tween_interval(BARK_HOLD)
@@ -144,6 +238,8 @@ func demonstrate(world_points: PackedVector2Array, duration: float, emphasize_he
 		for i in range(1, group_points.size()):
 			group_length += group_points[i].distance_to(group_points[i - 1])
 		var group_time: float = duration * (group_length / total_length)
+		if is_incidental_jump:
+			group_time *= INCIDENTAL_JUMP_SLOWDOWN
 
 		var smooth_points := _round_corners(group_points)
 		var smooth_total := 0.0
@@ -178,7 +274,7 @@ func demonstrate(world_points: PackedVector2Array, duration: float, emphasize_he
 ## did - lands the anchor near the midpoint of the OSCILLATION RANGE, which
 ## reads as "off to the side of wherever the platform actually is" instead
 ## of "on the platform". Reapplied to platform.global_position every frame.
-func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node2D) -> void:
+func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node2D, emphasize_hesitation: bool = false, pause_at_index: int = -1) -> void:
 	_state = State.DEMONSTRATING
 	_set_translucent(true)
 
@@ -188,14 +284,57 @@ func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node
 	var start: Vector2 = world_points[0]
 	var end: Vector2 = world_points[world_points.size() - 1]
 	var rest: Vector2 = platform.get_rest_position() if platform.has_method("get_rest_position") else platform.global_position
+
+	# An EARLY-jump waypoint (see below) is a ground-level detour for the
+	# abandoned-point beat, not a real ride point - exclude it from the
+	# surface-height average so this variant anchors to the same ride
+	# height as every other one.
+	var interior_start := 1
+	if pause_at_index > 0:
+		interior_start = pause_at_index + 1
 	var interior_y_sum := 0.0
-	for i in range(1, world_points.size() - 1):
+	for i in range(interior_start, world_points.size() - 1):
 		interior_y_sum += world_points[i].y
-	var surface_y: float = interior_y_sum / float(world_points.size() - 2)
+	var surface_y: float = interior_y_sum / float(world_points.size() - 1 - interior_start)
 	var ride_offset := Vector2(0.0, surface_y - rest.y)
 
 	global_position = start
 	_face((platform.global_position + ride_offset).x - start.x)
+
+	# Same pre-board beat every other hazard type gets: NO_JUMP's bark/crouch,
+	# JUMPED_TOO_EARLY's abandoned-point pause, or a brief default hold -
+	# platforms used to skip this entirely and look identical regardless of
+	# what the player actually did.
+	var used_early_detour := false
+	if pause_at_index > 0 and pause_at_index < world_points.size() - 1:
+		used_early_detour = true
+		var abandoned: Vector2 = world_points[pause_at_index]
+		var resume: Vector2 = Vector2(world_points[pause_at_index + 1].x, start.y)
+		_play_anim("run")
+		await _tween_to(abandoned, PLATFORM_APPROACH_TIME * 0.5)
+		if _state != State.DEMONSTRATING or not is_instance_valid(platform):
+			return
+		_play_anim("idle")
+		await get_tree().create_timer(ABANDONED_PAUSE).timeout
+		if _state != State.DEMONSTRATING or not is_instance_valid(platform):
+			return
+		_play_anim("run")
+		await _tween_to(resume, PLATFORM_APPROACH_TIME * 0.5)
+	elif emphasize_hesitation:
+		_face_player()
+		_play_anim("bark")
+		await get_tree().create_timer(BARK_HOLD).timeout
+		if _state != State.DEMONSTRATING or not is_instance_valid(platform):
+			return
+		_play_anim("sit")
+		await get_tree().create_timer(CROUCH_HOLD).timeout
+		_face((platform.global_position + ride_offset).x - global_position.x)
+	else:
+		_play_anim("idle")
+		await get_tree().create_timer(PRE_JUMP_PAUSE).timeout
+	if _state != State.DEMONSTRATING or not is_instance_valid(platform):
+		return
+
 	_play_anim("jump")
 	await _arc_land_on_platform(platform, ride_offset, PLATFORM_APPROACH_TIME)
 	if _state != State.DEMONSTRATING or not is_instance_valid(platform):
@@ -210,7 +349,8 @@ func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node
 	# position fresh - this removes that seam by tracking through both.
 	_play_anim("idle")
 	var t := 0.0
-	var hold_time: float = PLATFORM_HOP_UP_TIME + PLATFORM_RIDE_TIME
+	var ride_time: float = PLATFORM_RIDE_TIME_EMPHASIZED if emphasize_hesitation and not used_early_detour else PLATFORM_RIDE_TIME
+	var hold_time: float = PLATFORM_HOP_UP_TIME + ride_time
 	while t < hold_time:
 		if _state != State.DEMONSTRATING or not is_instance_valid(platform):
 			return
@@ -232,18 +372,42 @@ func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node
 	_play_anim("idle")
 
 
+## Simple point-to-point ground move, awaited - used for the small run
+## detours in the platform-ride's JUMPED_TOO_EARLY abandoned-point beat.
+func _tween_to(target: Vector2, time: float) -> void:
+	if time <= 0.0:
+		global_position = target
+		return
+	if _tween != null and _tween.is_valid():
+		_tween.kill()
+	_tween = create_tween()
+	_tween.tween_property(self, "global_position", target, time).set_trans(Tween.TRANS_SINE)
+	await get_tree().create_timer(time).timeout
+
+
 ## Jumps onto the platform, tracking its LIVE position every frame instead
 ## of aiming at a point computed once up front. The platform keeps moving
 ## for the whole ~0.35s of this hop, so a target snapshotted at the start
 ## drifts out from under her as she rises and falls - invisible mid-air
 ## (there's nothing to compare it against up there), then reading as a hard
 ## "appearing on the platform" pop the instant the next phase reads the
-## platform's position fresh and jumps her onto it. Chasing the live target
-## every frame, with frac growing 0->1 over the hop's duration, converges
-## to wherever the platform actually ends up by construction - no snapshot,
-## no discrepancy, no pop.
+## platform's position fresh and jumps her onto it.
+##
+## Chases the live target with a deadline-aware lerp (each step's weight is
+## dt/remaining-time, so it always closes the CURRENT gap by `time`) rather
+## than re-interpolating from the fixed launch point with a frac that just
+## grows 0->1. That version could visibly run forward then backward: if the
+## platform swings back toward the launch side mid-hop (common right around
+## its turnaround, exactly when a mistimed jump tends to happen), the target
+## drifting back toward the fixed start shrinks frac*(target-from) even as
+## frac keeps growing, so the interpolated position could rise then fall
+## back before the hop finished - a real, reproducible glitch, not a one-off.
+## Chasing the live target frame-to-frame only ever moves toward wherever it
+## currently is, so it only backtracks if the platform itself genuinely
+## reverses that much - an honest reflection of the platform's real motion,
+## which is the whole point of live-tracking in the first place.
 func _arc_land_on_platform(platform: Node2D, ride_offset: Vector2, time: float, arc_height: float = 30.0) -> void:
-	var from: Vector2 = global_position
+	var ground_pos: Vector2 = global_position
 	var t := 0.0
 	while t < time:
 		if _state != State.DEMONSTRATING or not is_instance_valid(platform):
@@ -251,11 +415,13 @@ func _arc_land_on_platform(platform: Node2D, ride_offset: Vector2, time: float, 
 		var frac: float = clampf(t / time, 0.0, 1.0)
 		var target_now: Vector2 = platform.global_position + ride_offset
 		_face(target_now.x - global_position.x)
-		var ground_pos: Vector2 = from.lerp(target_now, frac)
+		var dt: float = get_process_delta_time()
+		var weight: float = clampf(dt / maxf(time - t, 0.001), 0.0, 1.0)
+		ground_pos = ground_pos.lerp(target_now, weight)
 		var lift: float = sin(frac * PI) * arc_height
 		global_position = ground_pos - Vector2(0.0, lift)
 		await get_tree().process_frame
-		t += get_process_delta_time()
+		t += dt
 	if _state != State.DEMONSTRATING or not is_instance_valid(platform):
 		return
 	global_position = platform.global_position + ride_offset
