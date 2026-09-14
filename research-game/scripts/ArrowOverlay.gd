@@ -64,7 +64,7 @@ func _draw() -> void:
 		_draw_platform_path()
 		return
 
-	var trimmed := _trim_leading_run(_world_points)
+	var trimmed := _trim_to_final_jump(_world_points)
 	if trimmed.size() < 2:
 		return
 
@@ -97,18 +97,34 @@ func _draw() -> void:
 	draw_circle(tip + right, head_size * 0.2, line_colour)
 
 
-## Drops any flat run-up before the first jump leg. The arrow is a
-## correction cue for the jump itself; a run-up exists only so the diegetic
-## companion has room to run (and, for JUMPED_TOO_EARLY, pause at the
-## abandoned point) - neither is meaningful as a static screen arrow, and
-## the "cause" side of that distinction is already carried by the HUD text.
+## Drops everything before the LAST jump arc in the route. The arrow is a
+## correction cue for the hazard's own jump; a leading run-up exists only so
+## the diegetic companion has room to run (and, for JUMPED_TOO_EARLY, pause
+## at the abandoned point) - not meaningful as a static screen arrow, and the
+## "cause" side of that distinction is already carried by the HUD text.
+## Some routes now hop an incidental obstacle (e.g. spikes) before the real
+## hazard's jump - see Companion.gd's is_incidental_jump - which the shared
+## demo_points route the arrow reads from can't help but include too. Only
+## the LAST jump arc is the hazard being taught; an earlier hop and the run
+## legs around it are scenery, same reasoning as the plain leading run-up,
+## so trimming to the start of the trailing jump run drops both at once and
+## keeps the arrow a single clean arc even when the underlying route has two.
 ## A route with no jump leg at all (e.g. a direction hazard) is returned
 ## unchanged - there is no arc to isolate, so the whole route is the cue.
-func _trim_leading_run(points: PackedVector2Array) -> PackedVector2Array:
+func _trim_to_final_jump(points: PackedVector2Array) -> PackedVector2Array:
+	var is_jump_leg: Array[bool] = []
 	for i in range(1, points.size()):
-		if absf(points[i].y - points[i - 1].y) > JUMP_ARC_HEIGHT:
-			return points.slice(i - 1, points.size())
-	return points
+		is_jump_leg.append(absf(points[i].y - points[i - 1].y) > JUMP_ARC_HEIGHT)
+
+	var last_jump_start := -1
+	for i in range(is_jump_leg.size() - 1, -1, -1):
+		if is_jump_leg[i]:
+			last_jump_start = i
+		elif last_jump_start != -1:
+			break
+	if last_jump_start == -1:
+		return points
+	return points.slice(last_jump_start, points.size())
 
 
 ## MOVING PLATFORM: recomputes the ride anchor from the platform's LIVE
