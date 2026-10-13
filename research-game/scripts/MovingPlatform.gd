@@ -30,3 +30,12 @@ func _ready() -> void:
 ## the platform actually is instead of a stale, pre-authored guess.
 func get_rest_position() -> Vector2:
 	return _start
+
+
+## The far end of the platform's travel (where it turns around after leaving
+## rest). Demo routes use this alongside get_rest_position() to work out
+## which extreme of the oscillation is the one nearest the disembark ledge,
+## so the companion's demonstration can wait for the platform to actually
+## be near that side before jumping off it.
+func get_far_position() -> Vector2:
+	return _start + travel
