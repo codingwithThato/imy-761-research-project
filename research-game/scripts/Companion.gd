@@ -160,8 +160,10 @@ const ABANDONED_PAUSE := 0.45
 const INCIDENTAL_JUMP_SLOWDOWN := 1.8
 
 ## MOVING PLATFORM: how long each leg of a platform ride takes. Approach and
-## depart are quick hops; the ride itself is held long enough to clearly read
-## as "waiting on/riding the platform" rather than a blink-and-miss-it beat.
+## depart are quick hops; PLATFORM_RIDE_TIME/_EMPHASIZED are a CEILING on the
+## ride hold, not a fixed length - see _demonstrate_platform_ride(), which
+## departs as soon as the platform is actually near the far side and only
+## falls back to riding the full ceiling if it never gets close enough.
 ## Total (1.8s) comfortably fits Config.FEEDBACK_DURATION (3.0s).
 const PLATFORM_APPROACH_TIME := 0.35
 const PLATFORM_HOP_UP_TIME := 0.25
@@ -174,6 +176,23 @@ const PLATFORM_DEPART_TIME := 0.35
 ## and get cut off before the depart hop plays (the same failure mode fixed
 ## for composite gap+spike routes - see INCIDENTAL_JUMP_SLOWDOWN above).
 const PLATFORM_RIDE_TIME_EMPHASIZED := 0.5
+
+## How close (as a fraction of the platform's full travel distance, floored
+## at a minimum pixel value for short travels) counts as "near the far side"
+## for departure - see _demonstrate_platform_ride(). Generous enough that the
+## sine-eased platform tween, which spends proportionally more of its cycle
+## near each extreme than mid-swing, is likely to be caught inside it during
+## the bounded wait below.
+const PLATFORM_NEAR_FRACTION := 0.2
+const PLATFORM_NEAR_MIN := 15.0
+
+## Ceiling on how long she'll wait on the ground for the platform to swing
+## back near her before boarding. Kept small - unlike the ride-side wait,
+## which has a whole ride's worth of slack to spend, boarding happens right
+## after the pre-beat, and the emphasized/early-detour beats already eat most
+## of the budget (see the low-slack comment at the call site).
+const PLATFORM_BOARD_WAIT_MAX := 0.6
+const PLATFORM_BOARD_WAIT_MAX_LOW_SLACK := 0.1
 
 
 ## DIEGETIC: walk the correct route through the obstacle.
@@ -285,6 +304,17 @@ func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node
 	var end: Vector2 = world_points[world_points.size() - 1]
 	var rest: Vector2 = platform.get_rest_position() if platform.has_method("get_rest_position") else platform.global_position
 
+	# The platform's two turnaround points, and which of them is nearest the
+	# boarding side vs the far/disembark side - used below to make her wait
+	# for the platform rather than boarding or departing at an arbitrary
+	# point in its cycle. near_threshold is shared by both waits since
+	# it's a property of this platform's travel distance, not of which side
+	# is being waited for.
+	var far_pos: Vector2 = platform.get_far_position() if platform.has_method("get_far_position") else rest
+	var near_threshold: float = maxf(rest.distance_to(far_pos) * PLATFORM_NEAR_FRACTION, PLATFORM_NEAR_MIN)
+	var near_side: Vector2 = far_pos if far_pos.distance_to(start) < rest.distance_to(start) else rest
+	var far_extreme: Vector2 = far_pos if far_pos.distance_to(end) < rest.distance_to(end) else rest
+
 	# An EARLY-jump waypoint (see below) is a ground-level detour for the
 	# abandoned-point beat, not a real ride point - exclude it from the
 	# surface-height average so this variant anchors to the same ride
@@ -305,21 +335,26 @@ func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node
 	# JUMPED_TOO_EARLY's abandoned-point pause, or a brief default hold -
 	# platforms used to skip this entirely and look identical regardless of
 	# what the player actually did.
+	#
+	# JUMPED_TOO_EARLY is a flat ground-level run-to/pause/run-from on a
+	# plain gap route, because there a further stretch of solid ground
+	# genuinely exists between the abandoned point and the real takeoff spot.
+	# A platform route has no such stretch: `start` (world_points[0]) IS the
+	# ledge's edge (see _demonstrate_platform_ride()'s doc comment - the
+	# route only has ground on either side of the ride itself), and the
+	# inserted early-jump waypoint plus the original next point it clamps
+	# toward (see FailureData._effective_offset_points()) both land AT OR
+	# PAST that edge, in the ride/gap zone. Tweening a flat, ground-height
+	# run out to either of them showed her running in mid-air past the edge,
+	# over open space, before ever jumping - which is what this was fixing.
+	# The corrective lesson for a platform's JUMPED_TOO_EARLY is timing
+	# ("wait for the platform"), not distance, so there's nothing further to
+	# run to anyway - just hold the pause right at the edge instead.
 	var used_early_detour := false
 	if pause_at_index > 0 and pause_at_index < world_points.size() - 1:
 		used_early_detour = true
-		var abandoned: Vector2 = world_points[pause_at_index]
-		var resume: Vector2 = Vector2(world_points[pause_at_index + 1].x, start.y)
-		_play_anim("run")
-		await _tween_to(abandoned, PLATFORM_APPROACH_TIME * 0.5)
-		if _state != State.DEMONSTRATING or not is_instance_valid(platform):
-			return
 		_play_anim("idle")
 		await get_tree().create_timer(ABANDONED_PAUSE).timeout
-		if _state != State.DEMONSTRATING or not is_instance_valid(platform):
-			return
-		_play_anim("run")
-		await _tween_to(resume, PLATFORM_APPROACH_TIME * 0.5)
 	elif emphasize_hesitation:
 		_face_player()
 		_play_anim("bark")
@@ -335,6 +370,23 @@ func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node
 	if _state != State.DEMONSTRATING or not is_instance_valid(platform):
 		return
 
+	# Board only once the platform is actually swinging back toward her, not
+	# merely once it's nearby - right after it passes the near-side extreme
+	# it's still close but already receding again, and boarding right then
+	# means the fixed-duration hop below has to chase a target moving away
+	# for its whole flight, reading as a floaty over-fast "flying" landing
+	# instead of a normal jump (this is the counterpart to the far-side wait
+	# below, and the same asymmetry - jump timed against an approaching
+	# platform reads fine, against a receding one it doesn't - applies here).
+	# emphasize_hesitation/used_early_detour already spend most of the
+	# feedback budget on the pre-board beat, so they get a much shorter
+	# ceiling than the plain case.
+	var low_slack: bool = emphasize_hesitation or used_early_detour
+	var board_wait_max: float = PLATFORM_BOARD_WAIT_MAX_LOW_SLACK if low_slack else PLATFORM_BOARD_WAIT_MAX
+	await _wait_for_platform_near(platform, near_side, near_threshold, 0.0, board_wait_max, false, Vector2.ZERO)
+	if _state != State.DEMONSTRATING or not is_instance_valid(platform):
+		return
+
 	_play_anim("jump")
 	await _arc_land_on_platform(platform, ride_offset, PLATFORM_APPROACH_TIME)
 	if _state != State.DEMONSTRATING or not is_instance_valid(platform):
@@ -347,23 +399,34 @@ func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node
 	# underneath her, so she'd drift off-centre for that moment and then
 	# have to snap back once the tracking loop below read the platform's
 	# position fresh - this removes that seam by tracking through both.
+	#
+	# She departs as soon as the platform is actually near the extreme
+	# closest to the far ledge AND still approaching it (see the board-side
+	# wait above for why "close" alone isn't enough - the same receding-
+	# target problem applies here, on top of the original motivation for
+	# waiting at all: jumping off on a fixed timer fires at an essentially
+	# random point in the platform's cycle, almost always still mid-travel,
+	# so the fixed-duration hop that follows has to cover whatever gap is
+	# left in the same short time - reading as one huge, physically-
+	# impossible leap instead of the small step-off a rider who waited for
+	# the right moment would take). Waiting for an EXACT arrival isn't
+	# possible within the shared feedback budget (the platform's own back-
+	# and-forth cycle can run longer than the whole demo), so this instead
+	# waits up to the same ceiling the old fixed hold used -
+	# PLATFORM_HOP_UP_TIME plus PLATFORM_RIDE_TIME(_EMPHASIZED). Worst case
+	# (an unlucky phase that never comes close while approaching) she waits
+	# the full ceiling and departs anyway, identical to the previous
+	# behaviour - this only ever improves on it, never regresses the budget.
 	_play_anim("idle")
-	var t := 0.0
 	var ride_time: float = PLATFORM_RIDE_TIME_EMPHASIZED if emphasize_hesitation and not used_early_detour else PLATFORM_RIDE_TIME
-	var hold_time: float = PLATFORM_HOP_UP_TIME + ride_time
-	while t < hold_time:
-		if _state != State.DEMONSTRATING or not is_instance_valid(platform):
-			return
-		global_position = platform.global_position + ride_offset
-		await get_tree().process_frame
-		t += get_process_delta_time()
+	await _wait_for_platform_near(platform, far_extreme, near_threshold, PLATFORM_HOP_UP_TIME, PLATFORM_HOP_UP_TIME + ride_time, true, ride_offset)
 
 	if _state != State.DEMONSTRATING or not is_instance_valid(platform):
 		return
 	global_position = platform.global_position + ride_offset
 
-	# Depart at the correct moment - jump off toward the far ledge, from
-	# wherever the platform actually carried her to.
+	# Depart toward the far ledge, from wherever the platform actually
+	# carried her to.
 	_face(end.x - global_position.x)
 	_play_anim("jump")
 	await _arc_glide_to(end, PLATFORM_DEPART_TIME)
@@ -372,17 +435,45 @@ func _demonstrate_platform_ride(world_points: PackedVector2Array, platform: Node
 	_play_anim("idle")
 
 
-## Simple point-to-point ground move, awaited - used for the small run
-## detours in the platform-ride's JUMPED_TOO_EARLY abandoned-point beat.
-func _tween_to(target: Vector2, time: float) -> void:
-	if time <= 0.0:
-		global_position = target
-		return
-	if _tween != null and _tween.is_valid():
-		_tween.kill()
-	_tween = create_tween()
-	_tween.tween_property(self, "global_position", target, time).set_trans(Tween.TRANS_SINE)
-	await get_tree().create_timer(time).timeout
+## Bounded wait for the platform to be near `target_extreme` AND currently
+## approaching it (its distance to that point decreasing frame to frame) -
+## not merely close, since right after passing an extreme the platform is
+## still briefly nearby but already receding again. Boarding or departing
+## right at that instant means the fixed-duration hop that follows has to
+## chase a target moving the WRONG way for its whole flight - the deadline-
+## aware lerp in _arc_land_on_platform()/the fixed glide in _arc_glide_to()
+## still lands exactly on schedule, but only by covering the extra receding
+## distance in the same short window, which reads as an unnaturally fast
+## "flying" burst right at touchdown rather than a normal jump. Gating on
+## "still approaching" (not just "close") is what tells apart the case
+## players actually see as a good jump from the bad one.
+##
+## Waiting for an exact arrival isn't possible within the shared feedback
+## budget (the platform's own back-and-forth cycle can run longer than the
+## whole demo), so this gives up at `max_wait` and lets the caller jump
+## anyway - identical to the old fixed-hold behaviour in the worst case,
+## only ever better in the common one.
+##
+## When `track` is true, `ride_offset` is added to the platform's live
+## position and applied to global_position every frame (used while already
+## riding it, so she doesn't drift off it while waiting to depart); leave it
+## false while still waiting on the ground to board.
+func _wait_for_platform_near(platform: Node2D, target_extreme: Vector2, near_threshold: float, min_wait: float, max_wait: float, track: bool, ride_offset: Vector2) -> void:
+	var prev_dist := INF
+	var t := 0.0
+	while true:
+		if _state != State.DEMONSTRATING or not is_instance_valid(platform):
+			return
+		if track:
+			global_position = platform.global_position + ride_offset
+		var dist: float = platform.global_position.distance_to(target_extreme)
+		var approaching: bool = dist <= prev_dist
+		prev_dist = dist
+		var close_enough: bool = dist <= near_threshold
+		if t >= max_wait or (t >= min_wait and close_enough and approaching):
+			return
+		await get_tree().process_frame
+		t += get_process_delta_time()
 
 
 ## Jumps onto the platform, tracking its LIVE position every frame instead
