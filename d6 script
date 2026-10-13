@@ -1,0 +1,153 @@
+# IMY 761 Final System Walkthrough — Voice-Over Script
+
+## Introduction
+
+[Show game starting]
+
+This walkthrough demonstrates the final functionality of our 2D platformer, how we addressed feedback from the beta, how the system supports our research questions, and how the data gathering will be conducted.
+
+Our research investigates the effect of **diegetic versus non-diegetic failure feedback on player frustration and perceived competence**.
+
+In the diegetic condition, feedback is communicated through the companion and player-character reactions. In the non-diegetic condition, the same corrective information is communicated through HUD text and visual arrows.
+
+---
+
+# 1. Final Functionality and Beta Feedback
+
+[Show the same obstacle failed in different ways]
+
+One of the main beta issues was that the feedback did not always explain what the player had actually done wrong.
+
+The final system now tracks whether the player jumped, where they jumped from, and when they jumped. It then classifies the failure as, for example, **no jump, too early, or too late**, before selecting feedback.
+
+This means the same obstacle can produce different feedback depending on the player's actual mistake.
+
+[Show diegetic examples]
+
+The diegetic feedback was also made more informative.
+
+If the player does not jump, the companion turns towards them, barks, crouches and demonstrates the jump.
+
+If they jump too early, the companion passes the player's original take-off point, pauses, and then demonstrates the correct take-off position.
+
+So the companion now shows **what needs to change**, rather than simply showing that the obstacle should be jumped.
+
+[Show character reaction]
+
+We also clarified that the physical reaction refers to the **player character**. In the diegetic condition, the character can stumble or recoil after failure, while the non-diegetic condition communicates this information through the interface.
+
+[Show moving platform]
+
+The moving-platform feedback was also corrected. The companion now interacts with the platform's live position, jumps onto it, travels with it, and jumps off correctly.
+
+In the non-diegetic condition, the marker and arrow update with the moving platform to show where the player should stand and where they should move.
+
+[Show HUD feedback]
+
+The non-diegetic messages were also changed from obvious obstacle-based statements to **mistake-specific corrective feedback**, such as:
+
+"You didn't jump."
+
+"Jumped too early — take off later."
+
+Or:
+
+"Jumped too late — take off sooner."
+
+So the overall process is now:
+
+**detect failure → inspect player behaviour → classify the mistake → provide the correction.**
+
+Most importantly, both conditions use the **same detected mistake and corrective information**.
+
+Only the way that information is presented changes.
+
+This ensures that we are comparing diegetic and non-diegetic feedback, rather than comparing detailed feedback with vague feedback.
+
+---
+
+# 2. How the System Supports the Research Questions
+
+[Show primary research question]
+
+The system provides the controlled environment needed to investigate our primary research question.
+
+Both conditions use the same level, hazards, difficulty, failure logic, timing and underlying corrective information.
+
+The main variable that changes is the **feedback modality**.
+
+The first two sub-questions are literature-based, so the system does not answer them directly. Instead, it operationalises the distinction established in the literature: the companion and character reactions represent diegetic feedback, while HUD text and arrows represent non-diegetic feedback.
+
+The third sub-question compares **self-reported frustration and perceived competence** between the two conditions. The game creates the two controlled experiences that participants will later rate using the questionnaire.
+
+The fourth sub-question examines how players describe failure, competence and motivation to continue. This will be explored through the interviews.
+
+The companion also remains present in both conditions so that its presence does not become an additional experimental variable. Only its role in delivering feedback changes.
+
+---
+
+# 3. Data Gathering
+
+[Show two-group diagram]
+
+We plan to recruit approximately **10 to 15 participants** through convenience sampling.
+
+The study uses a **between-subjects design**, meaning each participant experiences only one condition.
+
+Participants will be divided as evenly as possible between the diegetic and non-diegetic groups, giving approximately **five to eight participants per group**.
+
+Gaming experience may be considered when balancing the groups, but it is not being investigated as a separate research question.
+
+Each session should last approximately **25 to 30 minutes**.
+
+[Show session sequence]
+
+Participants will first receive the Participant Information Sheet and sign the Informed Consent Form.
+
+A brief indication of gaming experience may then be collected if needed for group balancing.
+
+The participant will play their assigned condition for up to approximately **15 minutes**.
+
+The game is designed to be challenging enough for participants to encounter the feedback system several times, but failures are **not artificially triggered**.
+
+---
+
+## Post-Play Data
+
+[Show questionnaire]
+
+After gameplay, participants will complete a post-play questionnaire.
+
+For **perceived competence**, we will use relevant items from the **Basic Needs in Games Scale, or BANGS**, measuring competence satisfaction and competence frustration on a seven-point scale.
+
+For **frustration**, we will use relevant **Game Experience Questionnaire, or GEQ**, tension and annoyance items, measuring feelings such as annoyance, irritability and frustration.
+
+[Show interview questions]
+
+Participants will then complete an approximately **five-minute semi-structured interview** exploring their experience of failure, the helpfulness of the feedback, their sense of competence, frustration, and motivation to continue.
+
+With consent, the interviews will be audio-recorded, transcribed and anonymised.
+
+---
+
+## Data Analysis
+
+We will therefore collect both **quantitative and qualitative data**.
+
+The questionnaire results will be summarised using descriptive statistics and compared between the two conditions using **exploratory independent-samples t-tests**.
+
+Because the sample is small, these results will be interpreted cautiously.
+
+The interviews will be analysed using **Braun and Clarke's six-phase reflexive thematic analysis**, focusing on themes around frustration, competence, feedback usefulness and motivation to continue.
+
+---
+
+# Conclusion
+
+[Show both conditions]
+
+Overall, the main improvement from the beta is that the system now responds to **what the player actually did wrong**, rather than simply reacting to the obstacle.
+
+Both conditions share the same failure-detection and corrective logic, while only the presentation changes.
+
+This gives us a more useful feedback system and a more controlled way of investigating the effect of diegetic versus non-diegetic failure feedback on frustration and perceived competence.
