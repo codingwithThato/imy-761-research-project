@@ -1,97 +1,88 @@
-# Session handoff — building the game + finishing study materials
+# Session handoff — Deliverable 7 write-up
 
-Written 2026-10-12, end of a short session with Thato on branch `Thato`.
+Written 2026-10-27, end of a session with Thato on branch `Thato`.
 Paste this file to Claude at the start of the next session ("read
 SESSION-HANDOFF.md and continue from there").
 
-**Replaces the 2026-10-07 handoff** (D6 prep wrap-up + post-play
-questionnaire cleanup). Everything still relevant from it is carried
-forward below.
+**Replaces the 2026-10-13/10-20 handoff.** Everything still relevant is
+carried forward below.
 
-## Background (from the 2026-10-07 session)
+## Where we are
 
-- Game dev is finished; focus is now on **running the real study**.
-- Lecturer comment on D4 ("not allowed to ask this without ethics
-  approval…") was matched (by position + content, not an anchored comment)
-  to the BANGS/GEQ post-play questionnaire in D4 Appendix B.2.
-- Fix agreed with Thato: keep the validated BANGS/GEQ items **verbatim**,
-  but strip instrument names, citations and subscale headers from the
-  participant-facing form so young participants (e.g. a 13-year-old) aren't
-  confused. Built:
-  - `materials/post-play-questionnaire.md` — clean participant handout
-    (satisfaction/frustration items interleaved).
-  - `materials/post-play-questionnaire-scoring-key.md` — researcher-only
-    scoring key (don't collapse satisfaction + frustration into one score).
-- `Thato+Chenoa_Deliverable_4.pdf` deliberately left untouched.
+- Game dev is finished. **Data collection is finished.**
+- Now answering the **Deliverable 7** exercises one at a time. Thato pastes
+  each exercise; Claude drafts; Thato corrects anything done differently.
+- **Ethics clearance: Thato said to ignore it.** Don't raise it as a blocker.
 
-## What happened this session (2026-10-12)
+## What actually happened in data collection (overrides D4's plan)
 
-1. Re-read the old handoff and summarised it for Thato.
-2. **Ethics clearance: Thato said to ignore it.** Don't raise it again as
-   a blocker.
-3. Explained the "finish the `materials/` pack" item (see To-do #2).
-   Thato hasn't said yes or no to it yet.
-4. **Thato confirmed the game works perfectly** (played in the editor).
-   This clears the old "never played in Godot editor" risk.
-5. Thato asked how to build/export the game. Findings:
-   - Godot **4.7.1** installed at `/Applications/Godot.app` (not on PATH
-     as `godot`; binary is `/Applications/Godot.app/Contents/MacOS/Godot`).
-   - Project: `research-game/project.godot`, main scene
-     `res://Launcher.tscn`, Forward Plus renderer.
-   - **No export templates installed** (`~/Library/Application
-     Support/Godot/export_templates/` is empty).
-   - **No `export_presets.cfg`** in the project.
-   - **The game writes no data to disk** — no `FileAccess`, `user://`,
-     JSON or save code in any `.gd` script. Fine if the study only uses
-     paper questionnaires; if per-participant logs (deaths, retries,
-     completion time) are expected, logging must be added **before**
-     building.
-   Thato decided to do the build tomorrow.
+- 10 participants, 5 per condition (diegetic companion vs non-diegetic
+  on-screen arrow).
+- **Allocation was NOT randomised or stratified.** Participants were
+  allocated as they became available. Agreed wording: "Participants were
+  allocated to conditions as they became available, with five assigned to
+  each version of the game." Don't claim a coin flip or alternation. Add it
+  to Limitations: "Allocation was not formally randomised, which may have
+  introduced selection bias; future work should use a randomisation
+  procedure such as a shuffled allocation list."
+- 7 sessions in person on Thato's MacBook. 3 online over a video call
+  with screen sharing: the game was sent via Google Drive (2 macOS, 1
+  Windows; a Windows build was made for this).
+- Questionnaire: **Google Forms only** (9 items: BANGS competence items
+  1–6 on a 1–7 scale; GEQ tension/annoyance items 7–9 on a 0–4 scale).
+- Interview: **8 open-ended questions**, audio-recorded, transcribed
+  automatically, anonymised. Analysis of the transcripts will be described
+  in a later exercise.
+- No observation notes or death counts were recorded. No age or other
+  demographics were collected.
+- Analysis plan: three subscale means per participant (competence
+  satisfaction = items 1, 3, 5; competence frustration = 2, 4, 6;
+  tension/annoyance = 7–9), compared with Welch's independent-samples
+  t-tests. Report M, SD, t, p, Cohen's d; frame as exploratory (n = 10).
 
-## Build steps given to Thato
+## Deliverable 7 progress
 
-One-time: **Editor → Manage Export Templates → Download and Install** (~1 GB).
+- **Exercise 2 (data collection details, 150–250 words): DONE.** The final
+  text was given in chat. Thato changed "five" to "eight" open-ended
+  questions.
+- **Exercise 3: next.** Thato hasn't pasted its wording yet.
 
-Mac:
-1. Project → Export → Add → macOS
-2. Set Application → Bundle Identifier (required), e.g. `com.thato.researchgame`
-3. Codesign: leave default (ad-hoc)
-4. Export Project → save outside `research-game/`, **untick "Export With Debug"**
-5. On other Macs: right-click → Open, or System Settings → Privacy &
-   Security → Open Anyway
+## Research questions (from D5, copied via WALKTHROUGH-NOTES.md)
 
-Windows (can export from the Mac):
-1. Project → Export → Add → Windows Desktop
-2. Optionally tick **Embed PCK** for a single `.exe`
-3. Export Project, debug unticked
-4. On Windows: SmartScreen → More info → Run anyway
+- Primary: *The Effect of Diegetic Versus Non-Diegetic Failure Feedback on
+  Player Frustration and Perceived Competence in a 2D Platformer Game.*
+  Question form, if needed: "What is the effect of ... ?"
+- SQ1 (Literature): How do existing definitions distinguish diegetic from
+  non-diegetic game interfaces and feedback?
+- SQ2 (Literature): How does interface diegesis compare to non-diegesis in
+  terms of its effect on immersion, frustration, and perceived competence,
+  according to existing research?
+- SQ3 (Empirical): How does diegetic failure feedback compare to
+  non-diegetic failure feedback in terms of players' self-reported
+  frustration and perceived competence? (Questionnaire + t-tests.)
+- SQ4 (Empirical): How do players' descriptions of failure, competence, and
+  motivation to continue compare between the diegetic and non-diegetic
+  conditions? (Interviews.)
+- These are copied word for word from `WALKTHROUGH-NOTES.md`, which was
+  drafted from D5. **Not yet checked against the D5 PDF itself**, because
+  PDF text extraction failed on this machine (no poppler or pypdf). Check
+  the PDF before quoting the questions in D7.
 
-Claude offered to create the export presets and run the export from the
-terminal once templates are installed (headless:
-`/Applications/Godot.app/Contents/MacOS/Godot --headless --path research-game --export-release "<preset>" <out path>`).
+## Still open
 
-## To-do for next session
+- D4/D5 analysis text still says "No significance testing is performed";
+  the final report must use the t-tests instead.
+- The final report should describe the recruitment that actually happened
+  (friends & family were allowed).
+- `main` is far behind `dev`/`Thato`/`Chenoa`. Merge before submission if
+  the submission is from `main`.
 
-1. **Build the game.** First ask Thato: what machine(s) will participants
-   play on (Mac / Windows / both)? And does the study need in-game data
-   logging? If yes, add logging before exporting.
-2. **Finish the `materials/` pack** (pending Thato's go-ahead): pull D4
-   Appendix A (info sheet, consent form, right-to-withdraw, data/anonymity
-   statement, debrief) and Appendix B.1 (demographic questionnaire) into
-   standalone files in `materials/`, check them for wording a young
-   participant wouldn't follow, and flag proposed rewording before
-   changing anything.
-3. **Commit decision.** Untracked: `materials/` (2 files), `d6 script`,
-   `Thato+Chenoa_Deliverable_6.txt`; modified: `SESSION-HANDOFF.md`. Ask
-   Thato how to group/word commits — don't assume.
+## Reference
 
-## Minor open items (low priority, carried forward)
-
-- Non-diegetic arrow can't distinguish `JUMPED_TOO_EARLY` on the 3
-  composite hazards (Level2 Gap2, Level3 `tight_gap_2`/`_3`) — accepted
-  limitation, not a bug.
-- Spikes' `GENERIC` message wording never given a final direction.
-- `expected_takeoff_range` values formula-derived — but Thato now says the
-  game plays fine, so likely a non-issue.
-- `Thato+Chenoa_Deliverable_6.txt` is just a Google Drive link — never
-  clarified if intentional.
+- Google Form (participant): https://docs.google.com/forms/d/e/1FAIpQLSejzDxG0TOUj1Oq0AraPudzvKn4xFYPFzB97uOl1XckzEqd8Q/viewform
+- Edit form: https://docs.google.com/forms/d/1PZ_tcMwCMwcHJJhIzB3SR_2CPGO9Mn2Pb5JTbVLlkrs/edit
+- Responses sheet: https://docs.google.com/spreadsheets/d/1lYIDGeJyiASjrV2ld1CvjLk75bJMLVaEk7ygG-PLdpc/edit
+- Builds live in `research-game/T&Cs_GAME/` (gitignored, too big for
+  GitHub). Share them via the D6 Google Drive folder.
+- Materials: `materials/` (questionnaire PDF/MD, scoring key, playtest
+  session script, Google Form Apps Script).
