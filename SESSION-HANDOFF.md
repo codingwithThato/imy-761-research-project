@@ -66,7 +66,7 @@ Most of that did not happen. Write D7 from these facts:
   sessions and one non-diegetic session have none. In D7, describe them as
   informal and partial. **The raw notes contain real first names. Never put
   them in the repo or in any linked file without replacing names with
-  P-codes.**
+  P-codes.**a
 - **Not collected:** death counts, age, gender or any other demographics.
 - **Analysis plan:** per participant, three subscale means: competence
   satisfaction = items 1, 3, 5; competence frustration = items 2, 4, 6;
@@ -76,24 +76,12 @@ Most of that did not happen. Write D7 from these facts:
   Interviews: Braun and Clarke's (2006) six-phase reflexive thematic
   analysis (already named in D4 Exercises 2 and 4 and in its references).
 
-### Open decision: sample size and repeat players
+### Sample (confirmed by Thato 2026-10-29)
 
-- Two people played **both** versions: non-diegetic first, then diegetic as
-  a second session. The session list counts them twice to reach 10.
-- Claude will not write this up as if they were four different people. The
-  two honest options it offered:
-  - **A (recommended):** drop their second sessions. Final n = 8, 4 per
-    condition. Wording: "Two participants played both versions of the game;
-    only their first session was included in the analysis, giving a final
-    sample of eight (four per condition)."
-  - **B:** keep all 10 and disclose. Wording: "Two participants completed
-    both conditions, with their second session in the diegetic condition.
-    Because prior exposure to the levels may have influenced these sessions,
-    this is noted as a limitation."
-- Not decided yet. It affects every D7 section that states n, the t-tests,
-  and Limitations.
-- One participant was still marked "pending" in the notes. Confirm whether
-  they played, and in which condition, before stating group sizes.
+- **10 different participants, 5 per condition. There were no repeat
+  players.** 
+- Diegetic: P1, P2, P5, P7, P9. Non-diegetic: P3, P4, P6, P8, P10 (numbers
+  as in the anonymised responses sheet).
 
 ## 4. Research questions (verified word for word against the D5 PDF)
 
@@ -227,7 +215,6 @@ Useful later as supporting evidence for SQ4 themes and for the discussion:
 
 ## 7. Still open
 
-- The sample-size and repeat-player decision (section 3).
 - D4/D5 analysis text says "No significance testing is performed". D7 and
   the final article must use the t-tests instead.
 - Describe the recruitment that actually happened (friends and family were
@@ -249,3 +236,229 @@ Useful later as supporting evidence for SQ4 themes and for the discussion:
   GitHub). Share them via the D6 Google Drive folder.
 - Materials: `materials/` (questionnaire PDF/MD, scoring key, playtest
   session script, Google Form Apps Script).
+
+---
+
+## 9. Update 2026-10-29: Exercise 4 (data analysis), SQ3 done
+
+Written at the end of a session with Thato. Facts here override anything
+above that disagrees.
+
+### Corrections confirmed by Thato
+
+- **No repeat players.** 10 different participants, 5 per condition. The
+  lecturer knows this. Section 3 was corrected in this session.
+- **Conditions** (participant numbers as in the responses sheet):
+  diegetic = P1, P2, P5, P7, P9; non-diegetic = P3, P4, P6, P8, P10.
+- Never write participants' real names anywhere. Use P-codes only.
+
+### Data source
+
+- Anonymised responses sheet (shared as "anyone with the link", no names
+  or emails): https://docs.google.com/spreadsheets/d/1qMdhUKISLLb_6N0CBHgzejskS1582fxUGWZZg9DCmcU/edit?usp=sharing
+  Claude downloads it with `.../export?format=csv`. It has no Condition
+  column, so use the mapping above.
+- The D7 Google Doc: https://docs.google.com/document/d/1Glseuip_SZ43iJ6DIVuiu3RjshjBADPv25jVKjvipX8/edit?usp=sharing
+  Claude can't edit it (no Google sign-in; Claude in Chrome wasn't
+  connected), so Thato pastes content in by hand.
+
+### Exercise 4 wording (summary)
+
+For each empirically answered sub-question (SQ3 and SQ4 only), give the
+question, describe the analysis performed, and give the analysis results
+and a clear, concrete answer. SQ1/SQ2 (literature) and the primary
+question are not answered here. The brief's interview example says
+thematic analysis should give a list of themes, links between them, and
+a diagram (thematic map).
+
+### SQ3: final text (agreed)
+
+**How does diegetic failure feedback compare to non-diegetic failure
+feedback in terms of players' self-reported frustration and perceived
+competence?**
+
+**Analysis performed**
+
+The post-play questionnaire responses were scored following the guidance
+for each instrument. For each participant, three subscale scores were
+calculated as the mean of their items:
+- competence satisfaction (BANGS items 1, 3 and 5; scale 1–7)
+- competence frustration (BANGS items 2, 4 and 6; scale 1–7)
+- tension/annoyance (GEQ items 7, 8 and 9; scale 0–4)
+
+As recommended by Ballou et al. (2024), competence satisfaction and
+competence frustration were kept as separate constructs. They were not
+reverse-coded and combined into one score. Each subscale was compared
+between the diegetic group (n = 5) and the non-diegetic group (n = 5)
+using a two-tailed Welch's independent-samples t-test (α = .05). Welch's
+test does not assume equal variances, which suits small groups. Cohen's d
+is reported as the effect size. Because the sample is small, these tests
+are exploratory.
+
+**Results**
+
+| Subscale | Diegetic M (SD) | Non-diegetic M (SD) | t(df) | p | d |
+|---|---|---|---|---|---|
+| Competence satisfaction (1–7) | 6.07 (1.01) | 6.00 (1.35) | t(7.40) = 0.09 | .932 | 0.06 |
+| Competence frustration (1–7) | 2.40 (0.98) | 2.53 (1.22) | t(7.66) = −0.19 | .854 | −0.12 |
+| Tension/annoyance (0–4) | 1.33 (0.85) | 1.73 (1.30) | t(6.89) = −0.58 | .583 | −0.36 |
+
+[Figure X: `figures/sq3-subscale-comparison.png`]
+
+*Figure X.* Average scores for the diegetic (n = 5) and non-diegetic
+(n = 5) groups. Error bars show ±1 standard deviation. There were no
+significant differences between the groups on any measure (all p > .05).
+
+Figure X shows the average score of each group on the three subscales.
+
+There was no significant difference in competence satisfaction between
+the diegetic group (M = 6.07, SD = 1.01) and the non-diegetic group
+(M = 6.00, SD = 1.35); t(7.40) = 0.09, p = .932, d = 0.06.
+
+There was no significant difference in competence frustration between the
+diegetic group (M = 2.40, SD = 0.98) and the non-diegetic group (M = 2.53,
+SD = 1.22); t(7.66) = −0.19, p = .854, d = −0.12.
+
+There was no significant difference in tension/annoyance between the
+diegetic group (M = 1.33, SD = 0.85) and the non-diegetic group (M = 1.73,
+SD = 1.30); t(6.89) = −0.58, p = .583, d = −0.36.
+
+**Answer to SQ3:** In this sample, diegetic and non-diegetic failure
+feedback produced similar levels of self-reported perceived competence and
+frustration. Both groups reported high competence satisfaction and low
+competence frustration. Players who received diegetic feedback reported
+slightly lower tension/annoyance than those who received non-diegetic
+feedback, a small effect (d = −0.36), but the difference was not
+statistically significant. With five participants per group, the study
+could only reliably detect very large differences, so these results show
+no clear effect of feedback type. They do not show that feedback type has
+no effect.
+
+### Per-participant subscale scores (for checking)
+
+| P | Condition | Comp. satisfaction | Comp. frustration | Tension/annoyance |
+|---|---|---|---|---|
+| P1 | Diegetic | 7.00 | 2.00 | 2.00 |
+| P2 | Diegetic | 7.00 | 1.67 | 0.00 |
+| P3 | Non-diegetic | 7.00 | 1.67 | 1.00 |
+| P4 | Non-diegetic | 3.67 | 4.00 | 3.67 |
+| P5 | Diegetic | 5.00 | 2.67 | 1.00 |
+| P6 | Non-diegetic | 6.00 | 3.33 | 2.33 |
+| P7 | Diegetic | 6.33 | 1.67 | 1.67 |
+| P8 | Non-diegetic | 6.67 | 1.00 | 0.33 |
+| P9 | Diegetic | 5.00 | 4.00 | 2.00 |
+| P10 | Non-diegetic | 6.67 | 2.67 | 1.33 |
+
+p-values were computed by hand (SciPy wasn't installed). Worth one check
+in JASP/SPSS or Excel `T.TEST(range1, range2, 2, 3)` before submitting.
+
+### Files made (in `figures/`, not yet committed)
+
+- `sq3-subscale-comparison.png`: simple bar chart, 3 panels (one per
+  subscale), blue = diegetic, orange = non-diegetic, error bars = ±1 SD.
+  Thato asked for it to stay simple: no stats or M/SD printed on it. Don't
+  switch to dot plots or bell curves (Thato found them confusing; n = 5 is
+  too small for curves anyway).
+- `SQ3 table and graph.docx`: Word document with the table (caption
+  above), the chart and the Figure caption, for pasting into the Google
+  Doc.
+- `sq3-table.html`: the table as a web page, for copy-pasting.
+
+### Decisions and explanations agreed with Thato
+
+- Two-tailed tests, because no directional hypothesis is recorded. Switch
+  to one-tailed only if D4 stated a direction.
+- The null result is fine, not "pointless". For the discussion: small n
+  (low power), ceiling effect on competence (both about 6/7), a shared
+  difficulty spike at the gap after the spikes, and SQ4 may show
+  differences the questionnaire missed (e.g. the dog seen as "useless"/
+  "unfair" in the non-diegetic version). Don't change the analysis to get
+  significance.
+
+### Next: SQ4
+
+- The analysis description is drafted (Braun and Clarke's six phases;
+  transcripts coded with their condition; observation notes used as
+  support only, since they exist for 7 of 10 sessions; thematic map as
+  Figure X).
+- **Waiting on the anonymised interview transcripts** (names replaced with
+  P-codes). Then: code them, propose themes with quotes per condition, a
+  thematic map diagram, and a comparative answer to SQ4.
+
+---
+
+### Explained to Thato (for SQ3 in Exercise 4)
+
+- **α = .05**: the significance level, set before testing. p < .05 means
+  significant. All three SQ3 p-values are well above it. Keep "α = .05" in
+  the text; optionally write "with a significance level of α = .05".
+- **Cohen's d**: effect size, the mean difference in SD units. Rough
+  thresholds are 0.2 small, 0.5 medium, 0.8 large (Cohen, 1988, *Statistical
+  power analysis for the behavioral sciences*, 2nd ed., Lawrence Erlbaum).
+  The sign is diegetic minus non-diegetic.
+- **t(df)**: the t-statistic (mean difference relative to the noise) and the
+  degrees of freedom. The decimal df values come from Welch's correction,
+  which is expected.
+
+### Next
+
+Unchanged: SQ4 waits on the real anonymised transcripts.
+
+---
+
+## 11. Update 2026-11-05: D7 marked, final-article specs checked
+
+Written at the end of a session with Thato. Facts here override anything
+above that disagrees.
+
+### D7 came back marked
+
+- File: `Marked_Thato+Chenoa_Deliverable_7.pdf`. Six comments from
+  AE (Annique) Smith. The rubric page isn't filled in, so there's no mark yet.
+- Full analysis and fixes: **`d7 comments.md`** (checklist at the bottom).
+- In short:
+  1. SQ4 needs an explicit "answer to the RQ" paragraph that pulls the five
+     themes together (most serious).
+  2. Check normality with Shapiro-Wilk first; use Mann-Whitney U where it
+     isn't normal. **This replaces the Welch's t-test decision in sections 3
+     and 9.**
+  3. Report the SQ3 results as paragraphs, not bullet points.
+  4. Expand each theme: summary → quotes → contrasting views → wrap-up.
+  5. **Drop the observation notes as a data source.** They were never named
+     in D4–D6 (checked). This overrides section 3/5/6 guidance on using them
+     as support. Mentioning them in limitations is optional.
+  6. Enlarge the text in Figure 2 (thematic map).
+
+### Final article (D8) specs checked: no hidden text
+
+All files in `Specifications and Rubrics/` were inspected (PDF character
+colours, sizes and positions; docx hidden formatting, comments, tracked
+changes, metadata, alt text). Nothing hidden. Visible cues that matter:
+
+- Template Results section requires: M and SD, Shapiro-Wilk, then t-test or
+  Mann-Whitney U, reported in APA format; a thematic map for the
+  qualitative results.
+- Word limits per section, penalised: over in 1–2 sections costs 1%,
+  3 sections 2%, 4+ sections 5%. Delete all highlighted template text.
+- RQs go at the end of the Introduction as prose, not a table. Literature
+  SQs are answered in the Discussion (weight 18/100, the biggest).
+- Figures: no titles, caption below. Tables: caption above, horizontal
+  lines only, bold headings, centred numbers. UK English, Harvard
+  referencing. At least one game screenshot in Materials.
+- Participants: state the sampling method with a reason, plus ethics (be
+  open about the non-random allocation).
+- Don't overstate evidence; explain what n = 5 per group means rather than
+  just "small sample".
+- Video (max 3 min, voice-over, standalone) and critical reflection are
+  10/100 each. Presentation is separate (/16): 15 min plus 5 min of
+  questions, including reflection.
+
+### Next session: start here
+
+1. Run Shapiro-Wilk on each subscale × condition (6 tests) using the
+   per-participant scores in section 9. Then Mann-Whitney U (U, p,
+   r = Z/√N, medians/IQR) wherever normality fails. Install SciPy into the
+   scratchpad if needed.
+2. Rewrite the SQ3 method + results as APA prose; update Table 1, Figure 1
+   caption and Exercise 1 wording.
+3. Then the rest of the `d7 comments.md` checklist.
