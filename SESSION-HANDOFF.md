@@ -8,6 +8,9 @@ from there".
 **Replaces the 2026-10-27 handoff.** Everything still relevant is carried
 forward below.
 
+> **Latest update: section 12 (2026-11-08), the final article (D8).** Start
+> there. Where it disagrees with earlier sections, section 12 wins.
+
 ---
 
 ## 1. Project in one paragraph
@@ -462,3 +465,204 @@ changes, metadata, alt text). Nothing hidden. Visible cues that matter:
 2. Rewrite the SQ3 method + results as APA prose; update Table 1, Figure 1
    caption and Exercise 1 wording.
 3. Then the rest of the `d7 comments.md` checklist.
+
+---
+
+## 12. Update 2026-11-08: final article (D8) in progress
+
+Written at the end of a session with Thato. Facts here override anything
+above that disagrees. **Sections 9–11's "next" lists are done or superseded.**
+
+### Who writes what
+
+| Section | Words | Owner | Status |
+|---|---|---|---|
+| Abstract | 150–200 | Thato | Draft done (196). Redo after Discussion. |
+| Introduction | 400–600 | Thato | Draft done (579). **Redo next**, using Chenoa's Lit Review. |
+| Literature review | 600–800 | Chenoa | Done (774) |
+| Methods | 800–1200 | Chenoa | Done (891) |
+| Results | 800–1200 | Thato | **Done** (1166 incl. tables + captions) |
+| Discussion | 800–1200 | Thato | **Not started.** Now unblocked. |
+| Implications, Limitations, Future work | 400–600 / 200–400 / 200–400 | Chenoa | Not in the doc yet |
+| Conclusion, Critical reflection | 200–400 / 600–1000 | Together | Not started |
+| References | — | Together | 15 entries, deduplicated |
+
+Also due Monday: the explainer video (max 3 min).
+
+### The article file: `article/IMY761-Article.docx`
+
+- Built from the official template (`Specifications and Rubrics/…/IMY 761-
+  article template2026.docx`) so it keeps the template's styles. Thato
+  pasted Chenoa's Lit Review and Methods into it on 2026-11-08.
+- **Edit it in place from now on (python-docx: change only the target
+  paragraphs). Never rebuild it from a script or the template**, as that
+  would wipe Chenoa's sections. The old build script lived in a temporary
+  scratchpad and is gone; that's fine.
+- Word doesn't reload a file that changed on disk: tell Thato to close
+  without saving and reopen after every edit, or her open copy will
+  overwrite the change.
+- Word files can't be merged in git. Only one person edits the `.docx` at
+  a time.
+- Count words **including tables and captions** (that's what Word shows
+  when a section is selected). Results body text alone is 920.
+- Template rules: UK English, Harvard referencing, captions "Figure N:" /
+  "Table N:" (colon), table captions above, figure captions below, tables
+  with horizontal lines only, and no highlighted template text at
+  submission.
+- Still template placeholder text: the article title, the author line
+  ("Thato Kalagobe, Chenoa Perkett"), the editor's note at the top, and the
+  instructional text under the sections not yet written.
+- Also in `article/`: `Introduction-outline.docx` (bullet outline Thato
+  asked for) and `notes-for-chenoa.md` (Thato has edited it).
+
+### Statistics (replaces the Welch-only analysis in section 9)
+
+Shapiro-Wilk on each subscale × condition, then Welch's t-test if both
+groups are normal, otherwise Mann-Whitney U. Two-tailed, α = .05. Run in
+Python/SciPy; the hand-computed Welch values from section 9 matched exactly.
+
+| Subscale | SW diegetic | SW non-diegetic | Test | Result |
+|---|---|---|---|---|
+| Competence satisfaction | W = .80, p = .086 | **W = .77, p = .045** | Mann-Whitney U | U = 12.00, p = 1.000, r = .03; Mdn 6.33 vs 6.67 |
+| Competence frustration | W = .83, p = .141 | W = .97, p = .884 | Welch | t(7.66) = −0.19, p = .854, d = −0.12 |
+| Tension/annoyance | W = .85, p = .207 | W = .95, p = .758 | Welch | t(6.89) = −0.58, p = .583, d = −0.36 |
+
+- Non-normality comes from P4's 3.67 among four scores of 6–7.
+- U = 12.00 is the smaller U (what SPSS/JASP report).
+- Power, for the Discussion and Limitations: with n = 5 per group, 80%
+  power needs d ≈ 2.0, and power for d = 0.36 is about 8%.
+- Thato checked the explanation of p, α, Shapiro-Wilk, the tests and the
+  effect sizes. A presentation Q&A cheat sheet was given in chat (not saved
+  to a file).
+
+### Results section as written (Thato asked for no waffle)
+
+- **SQ3:** scoring sentence (item averaging, Ballou et al. 2024), then test
+  choice with citations (Shapiro and Wilk 1965, Welch 1947, Mann and
+  Whitney 1947), then normality paragraph + Table 1 (M, SD, Mdn, W, p),
+  then results paragraph + Table 2 (test, statistic, p, effect size), then
+  Figure 2 (bar chart `figures/sq3-subscale-comparison.png`), then
+  "Answer to sub-question 3".
+- **SQ4:** thematic-analysis steps (Braun and Clarke 2006), then Figure 3
+  (thematic map `figures/sq4-thematic-map.png`, redrawn at full width with
+  ~10 pt text, which was D7 fix 6), then five themes, each as summary →
+  quotes → contrasting view → wrap-up (D7 fix 4), then "Answer to
+  sub-question 4" (D7 fix 1).
+- Figure 1 is Chenoa's game screenshot in Methods.
+- No observation notes anywhere (D7 fix 5).
+- Every quote was checked against `submit_transcripts/`. D7 errors that
+  were corrected: P3 said "implementing", not "implementation"; P4 had
+  the **lowest** competence satisfaction, the highest tension/annoyance,
+  and tied with P9 for the highest competence frustration; unclear
+  progression was raised by about half (P3, P5, P8, P9, P10), not "most".
+- **P10 played the non-diegetic version** (Thato confirmed), but their
+  transcript describes the dog demonstrating. P10 is quoted only on
+  condition-neutral points (wanting a "well done" message).
+- P7 and P9 transcripts are fragments only, so the diegetic group leans on
+  P1, P2 and P5.
+- Introduction, Abstract and Results were checked for repeated 5-word
+  phrases; none remain apart from the research-question wording.
+
+### Agreed decisions
+
+- The scoring and thematic-analysis steps are described in Results, not
+  Methods (Thato's choice), so Methods doesn't need a data-analysis part.
+- The tutorial links Thato found (StatsKingdom, spss-tutorials,
+  technologynetworks) are for understanding and checking, not for
+  citing. Cite the original papers.
+- Keep the primary RQ in its D5 title form. In prose: "This study
+  investigates the effect of…". Don't reword it as a "How does…"
+  question (it would duplicate SQ3).
+- Don't describe the D4 plan (10–15 participants, stratified
+  randomisation, skill-level secondary question).
+
+### Next session: start here
+
+1. **Sub-heading numbers** (Thato said "tomorrow"): Lit Review has "1.1",
+   "2.1" and one unnumbered; Methods has "1.1", "2.1", "3.1"; Results has
+   none. These come from the template's broken auto-numbering. Make them
+   consistent (all numbered properly or all unnumbered). Chenoa's
+   sections, so agree with Thato.
+2. **Discussion** (Thato, 800–1200, weight 18/100). Answer SQ1 and SQ2
+   from Chenoa's Lit Review (Fagerholt and Lorentzon's four categories;
+   Iacovides et al. on expertise; Köhle et al. on context; Dormann and
+   Wallner on fictional consistency; Woo et al. on explanatory vs
+   confirmatory feedback; Ballou and Deterding and Shokeen et al. on
+   frustration being harmful when players can't tell why they failed).
+   Then combine all four answers to answer the primary question.
+   Interpret, don't repeat Results. Explain the null result: low power,
+   ceiling effect on competence (~6/7), both versions equally explanatory
+   (Woo et al.: explanatory feedback is what matters), frustration aimed
+   at the controls (a shared confound), and the companion's role (an idle
+   in-world character may cost the non-diegetic version). Keep evidence
+   separate from speculation.
+3. **Redo the Introduction** with Chenoa's sources and gap wording (her
+   Lit Review ends with nearly the same gap). Match her description of
+   Iacovides et al. (removing the HUD helped skilled players and confused
+   less experienced ones). Then the findings paragraph should match the
+   Discussion.
+4. **Redo the Abstract.** Its last sentence ("giving in-world characters
+   an active role in feedback may be as important as diegesis itself") must
+   match the Discussion's conclusion.
+5. Ask Chenoa to check two references (only reformatted, not verified):
+   Ballou and Deterding (2023), whose DOI 10.1145/3611028 looks like the
+   CHI PLAY 2023 paper with a longer title; and Shokeen et al. (2020),
+   whose DOI looks like CHI PLAY 2020 but the entry says DIS 2020.
+6. Then Conclusion and Critical reflection (together), fill in the
+   title/authors, delete the editor's note and highlights, and run a
+   cross-section consistency and repetition check across the whole
+   article.
+7. Git: `article/`, `figures/sq4-thematic-map.png` and
+   `submit_transcripts/` are untracked. Ask before committing the
+   transcripts (interview data). Consider adding `~$*` (Word lock files) to
+   `.gitignore`.
+
+---
+
+## 13. Update 2026-11-09: article almost complete
+
+Written at the end of a session with Thato. Facts here override anything above.
+
+### Done this session (all in `article/IMY761-Article.docx`)
+
+- **Discussion** written (1060 words): answers SQ1 and SQ2 from the Lit Review, then combines all four answers for the primary RQ; explains the null result (both versions explained every failure, ceiling on competence, the controls, the demonstration was easy to read, ~8% power); the idle dog breaks players' expectations (Ballou and Deterding).
+- **Implications** rewritten (428): fit with the field, another reading (the controls), the unexpected dog finding (P3 "unfair"), four design takeaways.
+- **Introduction** (591) and **Abstract** (181) redone to match.
+- **Results** QC: every statistic recomputed from the raw sheet (all match), all 18 quotes verified. Removed the unsupported claim "diegetic players more often described failure positively".
+- **Lit Review, Methods, Limitations, Future work** QC'd (Chenoa knows):
+  - Source fixes, checked against the abstracts: Iacovides (benefit for **experts**; nothing about novices being confused), Ballou and Deterding (frustration comes from failures **not matching expectations**), Dormann and Wallner (analysis of **online posts**; no "only when"). Reference entries corrected for Ballou and Deterding (title, PACMHCI 7(CHI PLAY), pp. 217–236) and Shokeen et al. ("Designing failure and feedback within puzzles", CHI PLAY '20 EA, pp. 370–374, all 7 authors).
+  - Methods facts confirmed by Thato: all participants are friends of the researchers, 6/10 university students, no family; there was an information sheet, consent incl. audio, and a debrief; the condition was picked on the launcher before the participant sat down (in-person sessions); no help was given; play stopped at 15 minutes or Level 5. The ethics-clearance sentence was removed on purpose.
+  - Limitations now include the friends-of-researchers bias and the incomplete P7/P9 transcripts. Future work: ~123 per group for 80% power at d = 0.36.
+- Thato and Chenoa will check Köhle et al. and Fagerholt and Lorentzon's examples by hand.
+- `article/structure-justification.docx`: how the article structure was derived (for Q&A).
+- Thato's style rules: plain academic English, no jargon, no repetition, no waffle, but natural flow beats hard sentence-length rules.
+
+### Next
+
+1. Conclusion (200–400) and Critical reflection (600–1000), together.
+2. Title and author line; delete the editor's note, highlights and "(x–y words)" from the headings.
+3. Sub-heading numbers: Thato is doing these by hand.
+4. Explainer video (max 3 min).
+
+### References update (2026-11-09, later)
+
+- Added 5 peer-reviewed references (20 in total): Llanos and Jørgensen (2011), Peacocke et al. (2015), Ryan, Rigby and Przybylski (2006), Wisniewski, Zierer and Hattie (2020), Law, Brühlmann and Mekler (2018). Cited in the Lit Review, Methods (GEQ), Limitations (GEQ structure not supported), Discussion and Implications.
+- Full text read and checked: Ryan et al. 2006 (competence is linked to intuitive controls; used in the Discussion), Llanos and Jørgensen 2011 (overlays are annoying once players get more information than they need; used for Theme 3), Fagerholt and Lorentzon 2009 (examples corrected: Dead Space suit health meter, Killzone 2 blood, Left 4 Dead outlines; competitive games need unambiguous overlays). Abstract checked: Wisniewski 2020, Law 2018, Peacocke 2015, Köhle 2021.
+- Köhle wording corrected everywhere: the bar suits **multiplayer** games and the wristwatch suits **story-driven** games. It does NOT say "fast play" or "quick reading".
+- Not peer-reviewed but kept, as the original sources: Fagerholt and Lorentzon (thesis), IJsselsteijn et al. (GEQ manual), Cohen (book). Shokeen et al. is an extended abstract.
+
+---
+
+## 14. Update 2026-11-10: article submitted, video script ready
+
+Facts here override anything above.
+
+- **Final article** is Thato's Google Docs version (`~/Downloads/IMY 761- article.docx`, Arial, headings in content controls). `article/IMY761-Article.docx` in the repo is the last version before the Google Docs edits. Conclusion (270 words) and Critical reflection (972 words) are written. Title: "Diegetic versus non-diegetic failure feedback: frustration and perceived competence in a 2D platformer".
+- Self-marking of the final version came to about 75/90. Known issues that Thato decided to leave as they are: the mixed-methods justification and Creswell were removed, the Lit Review still goes source by source, Figure 2 was cropped, Methods heading numbers are inconsistent, the typo "involved" should be "involving", and the SQ4 answer is missing its full stop.
+- **Explainer video script**: `article/explainer-video-script.docx`. Max **4 min** (the lecturers extended it from 3). Narration is 554 words, about 3:42. Scenes: intro, hook, RQ plus gap, the game, failure detection, diegetic, non-diegetic, key design decision, how the design answers SQ1–4, findings, close. The doc lists what to trim if the recording runs long. **Before recording, check the dog's behaviour against the final build.**
+- Also added: `article/critical-reflection-outline.docx` and `article/structure-justification.docx`.
+- `submit_transcripts/` (interview data) is still **not committed**. Ask Thato before adding it.
+
+### Next
+
+1. Record and edit the explainer video (no names, faces, real audio or responses; blur the condition picker; speed up traversal).
